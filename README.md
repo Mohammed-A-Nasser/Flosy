@@ -14,10 +14,9 @@
     <!-- ===== Firebase SDK ===== -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
     
     <style>
-        /* ===== المتغيرات ===== */
         :root {
             --primary: #1f2937;
             --secondary: #2563eb;
@@ -55,7 +54,6 @@
             direction: rtl;
         }
 
-        /* ===== شاشات الدخول والقفل ===== */
         #loginScreen {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -136,7 +134,6 @@
         }
         .lock-pin-grid .pin-clear:hover { background: var(--danger); color: white; }
 
-        /* ===== الشريط الجانبي - مع التمرير ===== */
         .sidebar {
             position: fixed;
             right: 0;
@@ -223,7 +220,6 @@
             margin-top: 12px;
         }
 
-        /* ===== مفتاح التبديل ===== */
         .switch {
             position: relative;
             display: inline-block;
@@ -276,7 +272,6 @@
             transition: var(--transition);
         }
 
-        /* ===== الصفحات ===== */
         .page { display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
         @keyframes fadeIn {
@@ -1280,32 +1275,42 @@
 
     <script>
         // ============================================================
-        // 🔥 إعدادات Firebase (استبدل ببياناتك)
+        // 🔥 إعدادات Firebase (صححتها بالكامل)
         // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDH4gHp8nA8T6t1YjX10zWVU6LIYCIxW2c",
+            authDomain: "flosy-4cc03.firebaseapp.com",
+            projectId: "flosy-4cc03",
+            storageBucket: "flosy-4cc03.firebasestorage.app",
+            messagingSenderId: "519291221807",
+            appId: "1:519291221807:web:eaf0ec21c4ecd68815d3da",
+            measurementId: "G-4F9L2KSBY3"
+        };
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDH4gHp8nA8T6t1YjX10zWVU6LIYCIxW2c",
-  authDomain: "flosy-4cc03.firebaseapp.com",
-  projectId: "flosy-4cc03",
-  storageBucket: "flosy-4cc03.firebasestorage.app",
-  messagingSenderId: "519291221807",
-  appId: "1:519291221807:web:eaf0ec21c4ecd68815d3da",
-  measurementId: "G-4F9L2KSBY3"
-};
+        // تهيئة Firebase بالصيغة الصحيحة
+        let db = null;
+        let analytics = null;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-        // تهيئة Firebase
         try {
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-            console.log('🔥 Firebase متصل بنجاح!');
+            if (typeof firebase !== 'undefined') {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                console.log('🔥 Firebase متصل بنجاح!');
+
+                // تفعيل Analytics
+                if (typeof firebase.analytics === 'function') {
+                    analytics = firebase.analytics();
+                    analytics.logEvent('app_open', {
+                        user: 'flosy_user',
+                        timestamp: new Date().toISOString()
+                    });
+                    console.log('📊 Analytics مفعل');
+                }
+            } else {
+                console.warn('⚠️ Firebase SDK لم يتم تحميله');
+            }
         } catch (error) {
-            console.warn('⚠️ Firebase غير متصل:', error.message);
+            console.warn('⚠️ Firebase غير متصل، سيتم استخدام التخزين المحلي فقط:', error.message);
         }
 
         // ============================================================
@@ -1646,7 +1651,6 @@ const analytics = getAnalytics(app);
             document.getElementById(tab === 'login' ? 'loginForm' : 'registerForm').classList.add('active');
         }
 
-        // دوال تسجيل الدخول مع Firebase
         async function loginUser() {
             const username = document.getElementById('loginUsername').value.trim();
             const pin = document.getElementById('loginPin').value;
@@ -1655,11 +1659,8 @@ const analytics = getAnalytics(app);
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('quickLockScreen').style.display = 'none';
                 updateUIForUser();
-                
-                // تحميل من Firebase
                 await syncLoadFromFirebase();
                 loadAllData();
-                
                 document.getElementById('loginError').textContent = '';
             } else {
                 document.getElementById('loginError').textContent = result.message;
@@ -1675,19 +1676,14 @@ const analytics = getAnalytics(app);
                 document.getElementById('registerError').textContent = '';
                 document.getElementById('regUsername').value = '';
                 document.getElementById('regPin').value = '';
-                
                 AUTH.currentUser = result.user;
                 AUTH.isLocked = false;
                 AUTH.saveSession();
-                
-                // حفظ في Firebase
                 await syncSaveToFirebase();
-                
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('quickLockScreen').style.display = 'none';
                 updateUIForUser();
                 loadAllData();
-                
                 alert('✅ تم إنشاء الحساب وتسجيل الدخول بنجاح!');
             } else {
                 document.getElementById('registerError').textContent = result.message;
@@ -2185,7 +2181,6 @@ const analytics = getAnalytics(app);
             document.getElementById('currentBalance').textContent = formatCurrency(getBalance());
             document.getElementById('transactionCount').textContent = transactions.length;
 
-            // التنبيهات
             const alerts = [];
             const budgets = DB.get('budgets');
             const now = new Date();
@@ -2231,7 +2226,6 @@ const analytics = getAnalytics(app);
                     .join('');
             }
 
-            // الرسوم البيانية
             const expenses = transactions.filter(t => t.type === 'expense');
             const cats = DB.getCategories();
             const expenseData = cats.map(c => ({ category: c,
@@ -2259,7 +2253,6 @@ const analytics = getAnalytics(app);
                 });
             }
 
-            // التدفق النقدي
             const monthly = {};
             transactions.forEach(t => {
                 const d = new Date(t.date);
@@ -2303,7 +2296,6 @@ const analytics = getAnalytics(app);
                 });
             }
 
-            // آخر العمليات
             const recent = transactions.slice(-5).reverse();
             const rc = document.getElementById('recentTransactions');
             if (recent.length === 0) {
@@ -2313,7 +2305,6 @@ const analytics = getAnalytics(app);
                     `<div class="table-responsive"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>التصنيف</th></tr></thead><tbody>${recent.map(t => `<tr><td>${getDateString(t.date)}</td><td><span class="filter-badge ${t.type}">${getTypeLabel(t.type)}</span></td><td class="${getTypeClass(t.type)}">${formatCurrency(t.amount)}</td><td>${t.category}</td></tr>`).join('')}</tbody></table></div>`;
             }
 
-            // ملخص الالتزامات
             const obl = DB.get('obligations');
             const now2 = new Date();
             const soon30 = obl.filter(o => { const diff = Math.ceil((new Date(o.dueDate) - now2) / (1000 * 60 * 60 * 24)); return diff >=
@@ -2420,7 +2411,6 @@ const analytics = getAnalytics(app);
                 DB.deleteTransaction(id);
                 loadTransactions();
                 updateDashboard();
-                // حفظ في Firebase
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
@@ -2874,7 +2864,7 @@ const analytics = getAnalytics(app);
         }
 
         // ============================================================
-        // 23. المزامنة مع Firebase
+        // 23. المزامنة مع Firebase (صححتها)
         // ============================================================
         const SYNC = {
             isSyncing: false,
@@ -2884,6 +2874,11 @@ const analytics = getAnalytics(app);
                 try {
                     this.isSyncing = true;
                     if (!AUTH.currentUser) return { success: false, error: 'لا يوجد مستخدم' };
+                    if (!db) {
+                        console.warn('⚠️ Firebase غير متصل، يتم الحفظ محلياً فقط');
+                        return { success: false, error: 'Firebase غير متصل' };
+                    }
+
                     const data = {
                         transactions: DB.get('transactions'),
                         budgets: DB.get('budgets'),
@@ -2898,7 +2893,8 @@ const analytics = getAnalytics(app);
                         users: AUTH.users,
                         lastUpdated: new Date().toISOString()
                     };
-                    await firebase.firestore().collection('flosy_users').doc(AUTH.currentUser.username).set(data);
+
+                    await db.collection('flosy_users').doc(AUTH.currentUser.username).set(data);
                     this.lastSync = new Date();
                     console.log('✅ تم حفظ البيانات في Firebase');
                     return { success: true };
@@ -2913,7 +2909,12 @@ const analytics = getAnalytics(app);
             async loadFromFirebase() {
                 try {
                     if (!AUTH.currentUser) return { success: false, error: 'لا يوجد مستخدم' };
-                    const doc = await firebase.firestore().collection('flosy_users').doc(AUTH.currentUser.username).get();
+                    if (!db) {
+                        console.warn('⚠️ Firebase غير متصل، يتم التحميل من المحلي فقط');
+                        return { success: false, error: 'Firebase غير متصل' };
+                    }
+
+                    const doc = await db.collection('flosy_users').doc(AUTH.currentUser.username).get();
                     if (doc.exists) {
                         const data = doc.data();
                         if (data.transactions) DB.set('transactions', data.transactions);
@@ -2952,7 +2953,6 @@ const analytics = getAnalytics(app);
             }
         };
 
-        // دوال المزامنة العامة
         async function syncSaveToFirebase() {
             if (!AUTH.currentUser) return;
             try {
@@ -3003,7 +3003,7 @@ const analytics = getAnalytics(app);
                 if (statusEl) statusEl.textContent = `✅ تم الحفظ في السحابة - ${new Date().toLocaleString('ar-EG')}`;
                 alert('✅ تم حفظ البيانات في السحابة بنجاح!');
             } else {
-                alert('❌ حدث خطأ: ' + result.error);
+                alert('❌ حدث خطأ: ' + (result.error || 'غير معروف'));
             }
         }
 
@@ -3022,7 +3022,7 @@ const analytics = getAnalytics(app);
             } else if (result.success && !result.data) {
                 alert('📭 لا توجد بيانات سابقة في السحابة');
             } else {
-                alert('❌ حدث خطأ: ' + result.error);
+                alert('❌ حدث خطأ: ' + (result.error || 'غير معروف'));
             }
         }
 
@@ -3032,7 +3032,6 @@ const analytics = getAnalytics(app);
         function addSyncSection() {
             const settingsGrid = document.getElementById('settingsGrid');
             if (!settingsGrid) return;
-            // تحقق إذا كان موجود بالفعل
             if (document.getElementById('syncCard')) return;
 
             const syncCard = document.createElement('div');
@@ -3102,14 +3101,12 @@ const analytics = getAnalytics(app);
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('quickLockScreen').style.display = 'none';
                 updateUIForUser();
-                // تحميل من Firebase
                 setTimeout(async () => {
                     await syncLoadFromFirebase();
                     loadAllData();
                 }, 500);
             }
 
-            // Dark Mode
             const settings = DB.getSettings();
             if (settings.darkMode) {
                 document.body.classList.add('dark-mode');
@@ -3135,12 +3132,10 @@ const analytics = getAnalytics(app);
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Menu Toggle
             document.getElementById('menuToggle').addEventListener('click', function() {
                 document.getElementById('sidebar').classList.toggle('open');
             });
 
-            // Navigation
             document.querySelectorAll('.sidebar-menu a').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -3168,7 +3163,6 @@ const analytics = getAnalytics(app);
                 });
             });
 
-            // ===== النماذج =====
             // Transaction Form
             document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
             updateCategorySelects();
@@ -3387,7 +3381,6 @@ const analytics = getAnalytics(app);
             document.getElementById('filterCategory').addEventListener('change', loadTransactions);
             document.getElementById('filterType').addEventListener('change', loadTransactions);
 
-            // التاريخ
             document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ar-EG', {
                 year: 'numeric',
                 month: 'long',
@@ -3395,11 +3388,9 @@ const analytics = getAnalytics(app);
                 weekday: 'long'
             });
 
-            // نشاط المستخدم
             document.addEventListener('click', function() { if (!AUTH.isLocked) AUTH.lastActivity = Date.now(); });
             document.addEventListener('keydown', function() { if (!AUTH.isLocked) AUTH.lastActivity = Date.now(); });
 
-            // جلسة العمل
             setInterval(() => {
                 if (!AUTH.isLocked && AUTH.currentUser) {
                     const idle = (Date.now() - AUTH.lastActivity) / 60000;
@@ -3407,7 +3398,6 @@ const analytics = getAnalytics(app);
                 }
             }, 30000);
 
-            // Enter للدخول
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && document.getElementById('quickLockScreen').style.display !== 'none') {
                     quickUnlock();
@@ -3417,7 +3407,6 @@ const analytics = getAnalytics(app);
                 }
             });
 
-            // ESC للقفل
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && !AUTH.isLocked && AUTH.currentUser) {
                     quickLock();
@@ -3427,8 +3416,7 @@ const analytics = getAnalytics(app);
             console.log('💰 فلوسي برو - النظام المالي المتكامل مع Firebase');
             console.log('👥 المستخدمين:', AUTH.users.length);
             console.log('👤 المستخدم الحالي:', AUTH.currentUser?.username || 'غير مسجل');
-            console.log('🔥 Firebase:',
-                typeof firebase !== 'undefined' ? '✅ متصل' : '❌ غير متصل (ضع بيانات Firebase)');
+            console.log('🔥 Firebase:', db ? '✅ متصل' : '❌ غير متصل (سيتم استخدام التخزين المحلي)');
         });
     </script>
 </body>
