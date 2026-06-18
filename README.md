@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     
+    <!-- ===== Firebase SDK ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    
     <style>
         /* ===== المتغيرات ===== */
         :root {
@@ -131,78 +136,147 @@
         }
         .lock-pin-grid .pin-clear:hover { background: var(--danger); color: white; }
 
-        /* ===== الشريط الجانبي ===== */
+        /* ===== الشريط الجانبي - مع التمرير ===== */
         .sidebar {
-            position: fixed; right: 0; top: 0; width: 280px; height: 100%;
-            background: var(--primary); padding: 20px; color: white;
-            overflow-y: auto; z-index: 1000; transition: var(--transition);
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: var(--primary);
+            padding: 20px;
+            color: white;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: var(--transition);
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
         }
-        .sidebar-header { text-align: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+        .sidebar-header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
         .sidebar-header h2 { font-size: 28px; margin-bottom: 5px; }
         .sidebar-header h2 i { color: var(--secondary); }
         .subtitle { font-size: 14px; opacity: 0.7; }
-        .sidebar-menu { margin: 20px 0; }
+
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding-bottom: 10px;
+        }
         .sidebar-menu a {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; color: rgba(255,255,255,0.7);
-            text-decoration: none; border-radius: 12px;
-            transition: var(--transition); margin: 4px 0; font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: var(--transition);
+            margin: 4px 0;
+            font-size: 16px;
             cursor: pointer;
         }
         .sidebar-menu a:hover, .sidebar-menu a.active {
-            background: rgba(255,255,255,0.1); color: white;
+            background: rgba(255,255,255,0.1);
+            color: white;
         }
         .sidebar-menu a.active { background: var(--secondary); color: white; }
         .sidebar-menu a i { width: 24px; text-align: center; }
 
         .sidebar-footer {
-            position: absolute; bottom: 20px; right: 20px; left: 20px;
-            padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
         }
         .lock-btn {
-            background: rgba(239,68,68,0.2); color: var(--danger);
-            border: 1px solid var(--danger); padding: 8px 16px;
-            border-radius: 10px; cursor: pointer; width: 100%;
-            font-size: 14px; display: flex; align-items: center;
-            justify-content: center; gap: 8px; transition: var(--transition);
-            font-family: inherit; margin-top: 5px;
+            background: rgba(239,68,68,0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-family: inherit;
+            margin-top: 5px;
         }
         .lock-btn:hover { background: var(--danger); color: white; }
 
         .dark-mode-toggle {
-            display: flex; align-items: center; justify-content: center;
-            gap: 12px; margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
         }
 
+        /* ===== مفتاح التبديل ===== */
         .switch {
-            position: relative; display: inline-block; width: 50px; height: 26px;
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
         }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background: #ccc; transition: .4s; border-radius: 34px;
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #ccc;
+            transition: .4s;
+            border-radius: 34px;
         }
         .slider:before {
-            position: absolute; content: ""; height: 20px; width: 20px;
-            right: 3px; bottom: 3px; background: white; transition: .4s;
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            right: 3px;
+            bottom: 3px;
+            background: white;
+            transition: .4s;
             border-radius: 50%;
         }
         input:checked + .slider { background: var(--secondary); }
         input:checked + .slider:before { transform: translateX(-24px); }
 
         .menu-toggle {
-            display: none; position: fixed; top: 20px; right: 20px;
-            z-index: 1100; background: var(--primary); color: white;
-            border: none; border-radius: 12px; padding: 10px 14px;
-            font-size: 20px; cursor: pointer; box-shadow: var(--shadow);
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1100;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
         }
 
         .main-content {
-            margin-right: 280px; padding: 30px; min-height: 100vh;
+            margin-right: 280px;
+            padding: 30px;
+            min-height: 100vh;
             transition: var(--transition);
         }
 
+        /* ===== الصفحات ===== */
         .page { display: none; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
         @keyframes fadeIn {
@@ -211,28 +285,43 @@
         }
 
         .page-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 30px; flex-wrap: wrap; gap: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .page-header h1 { font-size: 28px; font-weight: 700; }
         .page-header h1 i { color: var(--secondary); }
         .date-display { color: var(--text-light); font-size: 16px; }
 
         .stats-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px; margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
         .stat-card {
-            background: var(--card-bg); padding: 20px; border-radius: var(--radius);
-            box-shadow: var(--shadow); display: flex; align-items: center;
-            gap: 15px; transition: var(--transition);
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
             border-right: 4px solid var(--secondary);
         }
         .stat-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .stat-icon {
-            width: 50px; height: 50px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; color: white;
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
         }
         .income-card .stat-icon { background: var(--success); }
         .expense-card .stat-icon { background: var(--danger); }
@@ -242,11 +331,15 @@
         .stat-value { font-size: 24px; font-weight: 700; margin-top: 4px; }
 
         .charts-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 20px; margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
         .chart-card {
-            background: var(--card-bg); padding: 20px; border-radius: var(--radius);
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
         }
         .chart-card h3 { margin-bottom: 15px; font-size: 18px; }
@@ -254,16 +347,24 @@
         .chart-card canvas { max-height: 300px; max-width: 100%; }
 
         .alerts-section {
-            background: var(--card-bg); padding: 20px; border-radius: var(--radius);
-            box-shadow: var(--shadow); margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
         }
         .alerts-section h3 { margin-bottom: 15px; }
         .alerts-section h3 i { color: var(--warning); }
 
         .alert-item {
-            padding: 12px 16px; border-radius: 10px; margin: 8px 0;
-            display: flex; align-items: center; gap: 10px;
-            background: #fef3c7; color: #92400e;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fef3c7;
+            color: #92400e;
             border-right: 4px solid var(--warning);
         }
         .alert-item.success { background: #d1fae5; color: #065f46; border-color: var(--success); }
@@ -272,72 +373,124 @@
         .alert-item i { font-size: 18px; }
 
         .form-card {
-            background: var(--card-bg); padding: 24px; border-radius: var(--radius);
-            box-shadow: var(--shadow); margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
         }
         .form-card h3 { margin-bottom: 20px; }
         .form-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
         }
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-group label { font-weight: 500; font-size: 14px; color: var(--text-light); }
         .form-group label i { margin-left: 6px; color: var(--secondary); }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 10px 12px; border: 2px solid var(--border);
-            border-radius: 10px; background: var(--bg); color: var(--text);
-            font-family: inherit; font-size: 14px; transition: var(--transition);
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            transition: var(--transition);
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none; border-color: var(--secondary);
+            outline: none;
+            border-color: var(--secondary);
             box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
         .form-group.full-width { grid-column: 1 / -1; }
 
         .btn-primary {
-            background: var(--secondary); color: white; border: none;
-            padding: 12px 24px; border-radius: 10px; font-size: 16px;
-            font-weight: 500; display: inline-flex; align-items: center;
-            gap: 8px; cursor: pointer; transition: var(--transition);
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
             font-family: inherit;
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
         .btn-secondary {
-            background: var(--bg); color: var(--text); border: 2px solid var(--border);
-            padding: 10px 20px; border-radius: 10px; font-size: 14px;
-            display: inline-flex; align-items: center; gap: 8px;
-            cursor: pointer; transition: var(--transition); font-family: inherit;
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
         }
         .btn-secondary:hover { background: var(--border); }
 
         .btn-success {
-            background: var(--success); color: white; border: none;
-            padding: 10px 20px; border-radius: 10px; font-size: 14px;
-            display: inline-flex; align-items: center; gap: 8px;
-            cursor: pointer; transition: var(--transition); font-family: inherit;
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
         }
         .btn-success:hover { opacity: 0.8; }
 
         .btn-danger {
-            background: var(--danger); color: white; border: none;
-            padding: 10px 20px; border-radius: 10px; font-size: 14px;
-            display: inline-flex; align-items: center; gap: 8px;
-            cursor: pointer; transition: var(--transition); font-family: inherit;
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
         }
         .btn-danger:hover { opacity: 0.8; }
 
         .btn-warning {
-            background: var(--warning); color: white; border: none;
-            padding: 10px 20px; border-radius: 10px; font-size: 14px;
-            display: inline-flex; align-items: center; gap: 8px;
-            cursor: pointer; transition: var(--transition); font-family: inherit;
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
         }
         .btn-warning:hover { opacity: 0.8; }
 
         .table-responsive {
-            overflow-x: auto; background: var(--card-bg);
-            border-radius: var(--radius); box-shadow: var(--shadow);
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         thead { background: var(--bg); }
@@ -346,55 +499,87 @@
         tr:hover { background: var(--bg); }
 
         .table-controls {
-            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
         }
         .table-controls input, .table-controls select {
-            padding: 8px 12px; border: 2px solid var(--border);
-            border-radius: 8px; background: var(--bg); color: var(--text);
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
             font-family: inherit;
         }
 
         .progress-bar {
-            width: 100%; height: 8px; background: var(--bg);
-            border-radius: 4px; overflow: hidden; margin: 8px 0;
+            width: 100%;
+            height: 8px;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
         }
         .progress-bar .progress-fill {
-            height: 100%; border-radius: 4px; transition: width 0.6s ease;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s ease;
         }
         .progress-fill.success { background: var(--success); }
         .progress-fill.warning { background: var(--warning); }
         .progress-fill.danger { background: var(--danger); }
 
         .goal-card, .subscription-card, .budget-card, .obligation-card, .family-card, .debt-card {
-            background: var(--card-bg); padding: 16px 20px; border-radius: var(--radius);
-            box-shadow: var(--shadow); margin: 10px 0;
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap; gap: 10px; border-right: 4px solid var(--secondary);
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-right: 4px solid var(--secondary);
         }
         .goal-card .info, .subscription-card .info, .budget-card .info,
         .obligation-card .info, .family-card .info, .debt-card .info {
-            flex: 1; min-width: 150px;
+            flex: 1;
+            min-width: 150px;
         }
         .goal-card .info h4, .subscription-card .info h4, .budget-card .info h4,
         .obligation-card .info h4, .family-card .info h4, .debt-card .info h4 {
-            font-size: 16px; margin-bottom: 4px;
+            font-size: 16px;
+            margin-bottom: 4px;
         }
         .goal-card .info p, .subscription-card .info p, .budget-card .info p,
         .obligation-card .info p, .family-card .info p, .debt-card .info p {
-            font-size: 14px; color: var(--text-light);
+            font-size: 14px;
+            color: var(--text-light);
         }
 
         .report-controls {
-            display: flex; gap: 15px; flex-wrap: wrap; align-items: end;
-            background: var(--card-bg); padding: 20px; border-radius: var(--radius);
-            box-shadow: var(--shadow); margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: end;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
         }
         .report-summary {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px; margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
         }
         .report-stat {
-            background: var(--bg); padding: 15px; border-radius: var(--radius);
+            background: var(--bg);
+            padding: 15px;
+            border-radius: var(--radius);
             text-align: center;
         }
         .report-stat h4 { font-size: 14px; color: var(--text-light); margin-bottom: 8px; }
@@ -402,27 +587,40 @@
         .report-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
         .settings-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
         .settings-card {
-            background: var(--card-bg); padding: 20px; border-radius: var(--radius);
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
         }
         .settings-card h3 { margin-bottom: 15px; font-size: 18px; }
         .settings-card h3 i { color: var(--secondary); }
         .settings-card button { margin: 6px 0; width: 100%; justify-content: center; }
         .setting-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0; border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .add-category, .add-account, .add-family {
-            display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
         }
         .add-category input, .add-account input, .add-family input {
-            flex: 1; padding: 8px 12px; border: 2px solid var(--border);
-            border-radius: 8px; background: var(--bg); color: var(--text);
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
             min-width: 120px;
         }
 
@@ -430,22 +628,31 @@
         .amount-expense { color: var(--danger); font-weight: 600; }
 
         .transaction-actions button {
-            padding: 4px 8px; border: none; border-radius: 6px;
-            cursor: pointer; margin: 0 2px;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 2px;
         }
         .btn-edit { background: var(--warning); color: white; }
         .btn-delete { background: var(--danger); color: white; }
 
         .filter-badge {
-            display: inline-block; padding: 4px 12px; border-radius: 20px;
-            font-size: 12px; font-weight: 500;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
         }
         .filter-badge.income { background: #d1fae5; color: #065f46; }
         .filter-badge.expense { background: #fee2e2; color: #991b1b; }
 
         .badge {
-            display: inline-block; padding: 4px 12px; border-radius: 20px;
-            font-size: 12px; font-weight: 500;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
         }
         .badge-success { background: #d1fae5; color: #065f46; }
         .badge-warning { background: #fef3c7; color: #92400e; }
@@ -453,10 +660,15 @@
         .badge-secondary { background: #e2e8f0; color: #475569; }
 
         .empty-state {
-            padding: 40px; text-align: center; color: var(--text-light);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-light);
         }
         .empty-state i {
-            font-size: 48px; display: block; margin-bottom: 15px; opacity: 0.5;
+            font-size: 48px;
+            display: block;
+            margin-bottom: 15px;
+            opacity: 0.5;
         }
 
         @media (max-width: 768px) {
@@ -482,7 +694,7 @@
         <div class="login-container">
             <div class="login-header">
                 <h1><i class="fas fa-wallet"></i> فلوسي برو</h1>
-                <p class="subtitle">نظام مالي متكامل</p>
+                <p class="subtitle">نظام مالي متكامل مع سحابة</p>
             </div>
             <div class="login-tabs">
                 <button class="login-tab active" data-tab="login" onclick="switchLoginTab('login')">تسجيل الدخول</button>
@@ -1014,7 +1226,7 @@
         <!-- ===== الإعدادات ===== -->
         <section id="settings" class="page">
             <div class="page-header"><h1><i class="fas fa-cog"></i> الإعدادات</h1></div>
-            <div class="settings-grid">
+            <div class="settings-grid" id="settingsGrid">
                 <div class="settings-card">
                     <h3><i class="fas fa-shield-alt"></i> الأمان</h3>
                     <div class="setting-item">
@@ -1044,7 +1256,7 @@
                     </div>
                 </div>
                 <div class="settings-card">
-                    <h3><i class="fas fa-database"></i> البيانات</h3>
+                    <h3><i class="fas fa-database"></i> البيانات المحلية</h3>
                     <button onclick="backupData()" class="btn-secondary"><i class="fas fa-download"></i> نسخ احتياطي</button>
                     <button onclick="document.getElementById('restoreFile').click()" class="btn-secondary"><i class="fas fa-upload"></i> استعادة بيانات</button>
                     <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreData(event)">
@@ -1060,12 +1272,47 @@
                     <div id="accountsList"></div>
                     <div class="add-account"><input type="text" id="newAccount" placeholder="حساب جديد"><button onclick="addAccount()" class="btn-secondary"><i class="fas fa-plus"></i> إضافة</button></div>
                 </div>
+                <!-- ===== قسم المزامنة السحابية (يضاف بالجافاسكريبت) ===== -->
             </div>
         </section>
 
     </main>
 
     <script>
+        // ============================================================
+        // 🔥 إعدادات Firebase (استبدل ببياناتك)
+        // ============================================================
+/// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDH4gHp8nA8T6t1YjX10zWVU6LIYCIxW2c",
+  authDomain: "flosy-4cc03.firebaseapp.com",
+  projectId: "flosy-4cc03",
+  storageBucket: "flosy-4cc03.firebasestorage.app",
+  messagingSenderId: "519291221807",
+  appId: "1:519291221807:web:eaf0ec21c4ecd68815d3da",
+  measurementId: "G-4F9L2KSBY3"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+        // تهيئة Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            console.log('🔥 Firebase متصل بنجاح!');
+        } catch (error) {
+            console.warn('⚠️ Firebase غير متصل:', error.message);
+        }
+
         // ============================================================
         // 1. نظام المستخدمين والصلاحيات
         // ============================================================
@@ -1404,7 +1651,8 @@
             document.getElementById(tab === 'login' ? 'loginForm' : 'registerForm').classList.add('active');
         }
 
-        function loginUser() {
+        // دوال تسجيل الدخول مع Firebase
+        async function loginUser() {
             const username = document.getElementById('loginUsername').value.trim();
             const pin = document.getElementById('loginPin').value;
             const result = AUTH.login(username, pin);
@@ -1412,14 +1660,18 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('quickLockScreen').style.display = 'none';
                 updateUIForUser();
+                
+                // تحميل من Firebase
+                await syncLoadFromFirebase();
                 loadAllData();
+                
                 document.getElementById('loginError').textContent = '';
             } else {
                 document.getElementById('loginError').textContent = result.message;
             }
         }
 
-        function registerUser() {
+        async function registerUser() {
             const username = document.getElementById('regUsername').value.trim();
             const pin = document.getElementById('regPin').value;
             const role = document.getElementById('regRole').value;
@@ -1428,8 +1680,20 @@
                 document.getElementById('registerError').textContent = '';
                 document.getElementById('regUsername').value = '';
                 document.getElementById('regPin').value = '';
-                alert('✅ تم إنشاء الحساب بنجاح!');
-                switchLoginTab('login');
+                
+                AUTH.currentUser = result.user;
+                AUTH.isLocked = false;
+                AUTH.saveSession();
+                
+                // حفظ في Firebase
+                await syncSaveToFirebase();
+                
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('quickLockScreen').style.display = 'none';
+                updateUIForUser();
+                loadAllData();
+                
+                alert('✅ تم إنشاء الحساب وتسجيل الدخول بنجاح!');
             } else {
                 document.getElementById('registerError').textContent = result.message;
             }
@@ -1603,7 +1867,6 @@
         }
 
         function updateSessionTimeout() {
-            // سيتم تطبيقها في الجلسة القادمة
             alert('✅ تم تحديث مدة الجلسة');
         }
 
@@ -2162,6 +2425,8 @@
                 DB.deleteTransaction(id);
                 loadTransactions();
                 updateDashboard();
+                // حفظ في Firebase
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2177,6 +2442,7 @@
             DB.updateTransaction(id, { amount: parseFloat(amt), category: cat, notes: note });
             loadTransactions();
             updateDashboard();
+            setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
         }
 
         // ============================================================
@@ -2217,6 +2483,7 @@
             if (confirm('هل أنت متأكد من حذف هذه الميزانية؟')) {
                 DB.deleteBudget(id);
                 loadBudgets();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2254,6 +2521,7 @@
                 DB.deleteObligation(id);
                 loadObligations();
                 updateDashboard();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2287,6 +2555,7 @@
             if (confirm('هل أنت متأكد من حذف هذا الفرد؟')) {
                 DB.deleteFamilyMember(id);
                 loadFamily();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2321,6 +2590,7 @@
             if (confirm('هل أنت متأكد من حذف هذا الدين/السلفة؟')) {
                 DB.deleteDebt(id);
                 loadDebts();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2365,12 +2635,14 @@
             DB.updateGoal(id, val);
             loadGoals();
             updateDashboard();
+            setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
         }
 
         function deleteGoal(id) {
             if (confirm('هل أنت متأكد من حذف هذا الهدف؟')) {
                 DB.deleteGoal(id);
                 loadGoals();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2414,12 +2686,14 @@
             DB.set('subscriptions', subs);
             loadSubscriptions();
             updateDashboard();
+            setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
         }
 
         function deleteSubscription(id) {
             if (confirm('هل أنت متأكد من حذف هذا الاشتراك؟')) {
                 DB.deleteSubscription(id);
                 loadSubscriptions();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2530,7 +2804,8 @@
             if (DB.addCategory(val)) { input.value = '';
                 loadCategories();
                 updateCategorySelects();
-                alert('✅ تم إضافة التصنيف بنجاح'); } else alert('❌ هذا التصنيف موجود بالفعل');
+                alert('✅ تم إضافة التصنيف بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500); } else alert('❌ هذا التصنيف موجود بالفعل');
         }
 
         function deleteCategory(cat) {
@@ -2538,6 +2813,7 @@
                 DB.deleteCategory(cat);
                 loadCategories();
                 updateCategorySelects();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2548,7 +2824,8 @@
             if (DB.addAccount(val)) { input.value = '';
                 loadAccounts();
                 updateAccountSelects();
-                alert('✅ تم إضافة الحساب بنجاح'); } else alert('❌ هذا الحساب موجود بالفعل');
+                alert('✅ تم إضافة الحساب بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500); } else alert('❌ هذا الحساب موجود بالفعل');
         }
 
         function deleteAccount(acc) {
@@ -2556,6 +2833,7 @@
                 DB.deleteAccount(acc);
                 loadAccounts();
                 updateAccountSelects();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             }
         }
 
@@ -2601,7 +2879,190 @@
         }
 
         // ============================================================
-        // 23. تحميل جميع البيانات
+        // 23. المزامنة مع Firebase
+        // ============================================================
+        const SYNC = {
+            isSyncing: false,
+            lastSync: null,
+
+            async saveToFirebase() {
+                try {
+                    this.isSyncing = true;
+                    if (!AUTH.currentUser) return { success: false, error: 'لا يوجد مستخدم' };
+                    const data = {
+                        transactions: DB.get('transactions'),
+                        budgets: DB.get('budgets'),
+                        goals: DB.get('goals'),
+                        subscriptions: DB.get('subscriptions'),
+                        obligations: DB.get('obligations'),
+                        family: DB.get('family'),
+                        debts: DB.get('debts'),
+                        categories: DB.get('categories'),
+                        accounts: DB.get('accounts'),
+                        settings: DB.getSettings(),
+                        users: AUTH.users,
+                        lastUpdated: new Date().toISOString()
+                    };
+                    await firebase.firestore().collection('flosy_users').doc(AUTH.currentUser.username).set(data);
+                    this.lastSync = new Date();
+                    console.log('✅ تم حفظ البيانات في Firebase');
+                    return { success: true };
+                } catch (error) {
+                    console.error('❌ خطأ في حفظ البيانات:', error);
+                    return { success: false, error: error.message };
+                } finally {
+                    this.isSyncing = false;
+                }
+            },
+
+            async loadFromFirebase() {
+                try {
+                    if (!AUTH.currentUser) return { success: false, error: 'لا يوجد مستخدم' };
+                    const doc = await firebase.firestore().collection('flosy_users').doc(AUTH.currentUser.username).get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.transactions) DB.set('transactions', data.transactions);
+                        if (data.budgets) DB.set('budgets', data.budgets);
+                        if (data.goals) DB.set('goals', data.goals);
+                        if (data.subscriptions) DB.set('subscriptions', data.subscriptions);
+                        if (data.obligations) DB.set('obligations', data.obligations);
+                        if (data.family) DB.set('family', data.family);
+                        if (data.debts) DB.set('debts', data.debts);
+                        if (data.categories) DB.set('categories', data.categories);
+                        if (data.accounts) DB.set('accounts', data.accounts);
+                        if (data.settings) DB.saveSettings(data.settings);
+                        if (data.users) {
+                            AUTH.users = data.users;
+                            AUTH.saveUsers();
+                        }
+                        this.lastSync = new Date(data.lastUpdated);
+                        console.log('✅ تم تحميل البيانات من Firebase');
+                        return { success: true, data };
+                    } else {
+                        console.log('📭 لا توجد بيانات سابقة في Firebase');
+                        return { success: true, data: null };
+                    }
+                } catch (error) {
+                    console.error('❌ خطأ في تحميل البيانات:', error);
+                    return { success: false, error: error.message };
+                }
+            },
+
+            async autoSync() {
+                if (this.isSyncing) return;
+                if (!AUTH.currentUser) return;
+                await this.loadFromFirebase();
+                await this.saveToFirebase();
+                loadAllData();
+            }
+        };
+
+        // دوال المزامنة العامة
+        async function syncSaveToFirebase() {
+            if (!AUTH.currentUser) return;
+            try {
+                await SYNC.saveToFirebase();
+            } catch (e) { console.warn('⚠️ فشل الحفظ في Firebase:', e); }
+        }
+
+        async function syncLoadFromFirebase() {
+            if (!AUTH.currentUser) return;
+            try {
+                await SYNC.loadFromFirebase();
+            } catch (e) { console.warn('⚠️ فشل التحميل من Firebase:', e); }
+        }
+
+        async function syncNow() {
+            if (!AUTH.currentUser) {
+                alert('❌ الرجاء تسجيل الدخول أولاً');
+                return;
+            }
+            const btn = event?.target;
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري المزامنة...';
+            }
+            try {
+                await SYNC.autoSync();
+                const statusEl = document.getElementById('syncStatus');
+                if (statusEl) statusEl.textContent = `✅ تمت المزامنة بنجاح - ${new Date().toLocaleString('ar-EG')}`;
+                alert('✅ تمت المزامنة مع السحابة بنجاح!');
+            } catch (error) {
+                alert('❌ حدث خطأ أثناء المزامنة: ' + error.message);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-sync"></i> مزامنة الآن';
+                }
+            }
+        }
+
+        async function saveToCloud() {
+            if (!AUTH.currentUser) {
+                alert('❌ الرجاء تسجيل الدخول أولاً');
+                return;
+            }
+            const result = await SYNC.saveToFirebase();
+            if (result.success) {
+                const statusEl = document.getElementById('syncStatus');
+                if (statusEl) statusEl.textContent = `✅ تم الحفظ في السحابة - ${new Date().toLocaleString('ar-EG')}`;
+                alert('✅ تم حفظ البيانات في السحابة بنجاح!');
+            } else {
+                alert('❌ حدث خطأ: ' + result.error);
+            }
+        }
+
+        async function loadFromCloud() {
+            if (!AUTH.currentUser) {
+                alert('❌ الرجاء تسجيل الدخول أولاً');
+                return;
+            }
+            if (!confirm('سيتم استبدال كل البيانات المحلية ببيانات السحابة. هل أنت متأكد؟')) return;
+            const result = await SYNC.loadFromFirebase();
+            if (result.success && result.data) {
+                loadAllData();
+                const statusEl = document.getElementById('syncStatus');
+                if (statusEl) statusEl.textContent = `✅ تم التحميل من السحابة - ${new Date().toLocaleString('ar-EG')}`;
+                alert('✅ تم تحميل البيانات من السحابة بنجاح!');
+            } else if (result.success && !result.data) {
+                alert('📭 لا توجد بيانات سابقة في السحابة');
+            } else {
+                alert('❌ حدث خطأ: ' + result.error);
+            }
+        }
+
+        // ============================================================
+        // 24. إضافة قسم المزامنة في الإعدادات
+        // ============================================================
+        function addSyncSection() {
+            const settingsGrid = document.getElementById('settingsGrid');
+            if (!settingsGrid) return;
+            // تحقق إذا كان موجود بالفعل
+            if (document.getElementById('syncCard')) return;
+
+            const syncCard = document.createElement('div');
+            syncCard.id = 'syncCard';
+            syncCard.className = 'settings-card';
+            syncCard.innerHTML = `
+                <h3><i class="fas fa-cloud"></i> المزامنة السحابية</h3>
+                <button onclick="syncNow()" class="btn-primary" style="width:100%;justify-content:center;margin:5px 0;">
+                    <i class="fas fa-sync"></i> مزامنة الآن
+                </button>
+                <button onclick="saveToCloud()" class="btn-secondary" style="width:100%;justify-content:center;margin:5px 0;">
+                    <i class="fas fa-upload"></i> حفظ في السحابة
+                </button>
+                <button onclick="loadFromCloud()" class="btn-secondary" style="width:100%;justify-content:center;margin:5px 0;">
+                    <i class="fas fa-download"></i> تحميل من السحابة
+                </button>
+                <div id="syncStatus" style="text-align:center;margin-top:10px;font-size:12px;color:var(--text-light);">
+                    ${SYNC.lastSync ? `✅ آخر مزامنة: ${SYNC.lastSync.toLocaleString('ar-EG')}` : '⏳ لم تتم المزامنة بعد'}
+                </div>
+            `;
+            settingsGrid.appendChild(syncCard);
+        }
+
+        // ============================================================
+        // 25. تحميل جميع البيانات
         // ============================================================
         function loadAllData() {
             updateDashboard();
@@ -2615,6 +3076,7 @@
             loadSettings();
             updatePortalStats();
             loadUsersList();
+            addSyncSection();
 
             const cy = new Date().getFullYear();
             ['statsYear', 'reportYear'].forEach(id => {
@@ -2633,7 +3095,7 @@
         }
 
         // ============================================================
-        // 24. تهيئة التطبيق
+        // 26. تهيئة التطبيق
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const hasSession = AUTH.init();
@@ -2645,7 +3107,11 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('quickLockScreen').style.display = 'none';
                 updateUIForUser();
-                loadAllData();
+                // تحميل من Firebase
+                setTimeout(async () => {
+                    await syncLoadFromFirebase();
+                    loadAllData();
+                }, 500);
             }
 
             // Dark Mode
@@ -2662,6 +3128,7 @@
                 const s = DB.getSettings();
                 s.darkMode = this.checked;
                 DB.saveSettings(s);
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             document.getElementById('settingsDarkMode').addEventListener('change', function() {
@@ -2670,6 +3137,7 @@
                 const s = DB.getSettings();
                 s.darkMode = this.checked;
                 DB.saveSettings(s);
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // Menu Toggle
@@ -2748,6 +3216,7 @@
                 document.getElementById('txNotes').value = '';
                 document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
                 alert('✅ تم إضافة العملية بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // Budget Form
@@ -2764,6 +3233,7 @@
                 loadBudgets();
                 document.getElementById('budgetLimit').value = '';
                 alert('✅ تم إضافة الميزانية بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // Obligation Form
@@ -2786,6 +3256,7 @@
                 document.getElementById('oblDate').value = '';
                 document.getElementById('oblNotes').value = '';
                 alert('✅ تم إضافة الالتزام بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // Family Form
@@ -2800,6 +3271,7 @@
                 document.getElementById('familyName').value = '';
                 document.getElementById('familyBudget').value = '';
                 alert('✅ تم إضافة الفرد بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // Debt Form
@@ -2822,6 +3294,7 @@
                 document.getElementById('debtInstallment').value = '';
                 document.getElementById('debtDueDate').value = '';
                 alert('✅ تم إضافة الدين/السلفة بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // Goal Form
@@ -2842,6 +3315,7 @@
                 document.getElementById('goalTarget').value = '';
                 document.getElementById('goalCurrent').value = '';
                 alert('✅ تم إضافة الهدف بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // Subscription Form
@@ -2860,6 +3334,7 @@
                 document.getElementById('subAmount').value = '';
                 document.getElementById('subDueDate').value = '';
                 alert('✅ تم إضافة الاشتراك بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // Portal Form
@@ -2890,6 +3365,7 @@
                 document.getElementById('portalSubCategory').value = '';
                 document.getElementById('portalDate').value = new Date().toISOString().split('T')[0];
                 alert('✅ تم إضافة الدخل عبر البوابة بنجاح');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
             // User Form
@@ -2905,6 +3381,7 @@
                     loadUsersList();
                     updateUIForUser();
                     alert('✅ تم إضافة المستخدم بنجاح');
+                    setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
                 } else {
                     alert(result.message);
                 }
@@ -2952,9 +3429,11 @@
                 }
             });
 
-            console.log('💰 فلوسي برو - النظام المالي المتكامل');
+            console.log('💰 فلوسي برو - النظام المالي المتكامل مع Firebase');
             console.log('👥 المستخدمين:', AUTH.users.length);
             console.log('👤 المستخدم الحالي:', AUTH.currentUser?.username || 'غير مسجل');
+            console.log('🔥 Firebase:',
+                typeof firebase !== 'undefined' ? '✅ متصل' : '❌ غير متصل (ضع بيانات Firebase)');
         });
     </script>
 </body>
