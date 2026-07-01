@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فلوسي برو | Flosy Pro v6.0</title>
+    <title>فلوسي برو | Flosy Pro v6.5</title>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -27,6 +27,8 @@
             --info: #3b82f6;
             --purple: #8b5cf6;
             --pink: #ec4899;
+            --gold: #fbbf24;
+            --green: #10b981;
             --bg: #f1f5f9;
             --card-bg: #ffffff;
             --text: #1e293b;
@@ -57,7 +59,7 @@
             font-size: var(--font-size);
         }
 
-        /* ===== تنسيقات الإشعارات (Toasts) ===== */
+        /* ===== Toast ===== */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -259,10 +261,8 @@
         .expense-card .stat-icon { background: var(--danger); }
         .balance-card .stat-icon { background: var(--secondary); }
         .transactions-card .stat-icon { background: var(--warning); }
-        .stat-info h3 { font-size: 14px; color: var(--text-light); font-weight: 400; }
-        .stat-value { font-size: 24px; font-weight: 700; margin-top: 4px; }
+        .charity-card .stat-icon { background: var(--gold); }
 
-        /* ===== Quick Actions ===== */
         .quick-actions {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -289,10 +289,7 @@
             display: block;
             margin-bottom: 8px;
         }
-        .quick-action span {
-            font-size: 13px;
-            font-weight: 500;
-        }
+        .quick-action span { font-size: 13px; font-weight: 500; }
 
         .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .chart-card { background: var(--card-bg); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); }
@@ -300,7 +297,6 @@
         .chart-card h3 i { color: var(--secondary); }
         .chart-card canvas { max-height: 300px; max-width: 100%; }
 
-        /* ===== التنبيهات ===== */
         .alerts-section { background: var(--card-bg); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 30px; }
         .alerts-section h3 { margin-bottom: 15px; }
         .alerts-section h3 i { color: var(--warning); }
@@ -311,7 +307,6 @@
         .alert-item.info { background: #dbeafe; color: #1e40af; border-color: var(--info); }
         .alert-item i { font-size: 18px; }
 
-        /* ===== النماذج ===== */
         .form-card { background: var(--card-bg); padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 30px; }
         .form-card h3 { margin-bottom: 20px; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
@@ -338,10 +333,9 @@
         .btn-success:hover { opacity: 0.8; }
         .btn-danger { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: var(--transition); font-family: inherit; }
         .btn-danger:hover { opacity: 0.8; }
-        .btn-warning { background: var(--warning); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: var(--transition); font-family: inherit; }
-        .btn-warning:hover { opacity: 0.8; }
+        .btn-gold { background: var(--gold); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: var(--transition); font-family: inherit; }
+        .btn-gold:hover { opacity: 0.8; }
 
-        /* ===== الجداول ===== */
         .table-responsive { overflow-x: auto; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); }
         table { width: 100%; border-collapse: collapse; font-size: 14px; }
         thead { background: var(--bg); }
@@ -361,8 +355,32 @@
         .progress-fill.success { background: var(--success); }
         .progress-fill.warning { background: var(--warning); }
         .progress-fill.danger { background: var(--danger); }
+        .progress-fill.gold { background: var(--gold); }
 
-        /* ===== التقارير ===== */
+        .goal-card, .subscription-card, .budget-card, .obligation-card, .family-card, .debt-card,
+        .saving-card, .visa-card, .association-card, .charity-card {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-right: 4px solid var(--secondary);
+        }
+        .charity-card { border-right-color: var(--gold); }
+
+        .goal-card .info, .subscription-card .info, .budget-card .info,
+        .obligation-card .info, .family-card .info, .debt-card .info,
+        .saving-card .info, .visa-card .info, .association-card .info,
+        .charity-card .info {
+            flex: 1;
+            min-width: 150px;
+        }
+
         .report-controls { display: flex; gap: 15px; flex-wrap: wrap; align-items: end; background: var(--card-bg); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 30px; }
         .report-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0; }
         .report-stat { background: var(--bg); padding: 15px; border-radius: var(--radius); text-align: center; }
@@ -370,7 +388,6 @@
         .report-stat p { font-size: 24px; font-weight: 700; }
         .report-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
-        /* ===== الإعدادات ===== */
         .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
         .settings-card { background: var(--card-bg); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); }
         .settings-card h3 { margin-bottom: 15px; font-size: 18px; }
@@ -396,52 +413,20 @@
         .badge-danger { background: #fee2e2; color: #991b1b; }
         .badge-secondary { background: #e2e8f0; color: #475569; }
         .badge-gold { background: #fbbf24; color: #78350f; }
-        .badge-silver { background: #e2e8f0; color: #475569; }
-        .badge-bronze { background: #d97706; color: #451a03; }
+        .badge-green { background: #d1fae5; color: #065f46; }
 
         .filter-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; }
         .filter-badge.income { background: #d1fae5; color: #065f46; }
         .filter-badge.expense { background: #fee2e2; color: #991b1b; }
+        .filter-badge.charity { background: #fef3c7; color: #78350f; }
 
         .empty-state { padding: 40px; text-align: center; color: var(--text-light); }
         .empty-state i { font-size: 48px; display: block; margin-bottom: 15px; opacity: 0.5; }
-
-        .goal-card, .subscription-card, .budget-card, .obligation-card, .family-card, .debt-card,
-        .saving-card, .visa-card, .association-card {
-            background: var(--card-bg); padding: 16px 20px; border-radius: var(--radius);
-            box-shadow: var(--shadow); margin: 10px 0;
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap; gap: 10px; border-right: 4px solid var(--secondary);
-        }
-        .goal-card .info, .subscription-card .info, .budget-card .info,
-        .obligation-card .info, .family-card .info, .debt-card .info,
-        .saving-card .info, .visa-card .info, .association-card .info {
-            flex: 1; min-width: 150px;
-        }
 
         .activity-log { max-height: 300px; overflow-y: auto; }
         .activity-item { display: flex; justify-content: space-between; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
         .activity-item .time { color: var(--text-light); font-size: 12px; }
         .activity-item .action { font-weight: 500; }
-
-        /* ===== الـ Badge الإنجازات ===== */
-        .achievement-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            background: var(--bg);
-            border: 2px solid var(--border);
-        }
-        .achievement-badge.unlocked {
-            border-color: var(--gold);
-            background: #fef3c7;
-            color: #78350f;
-        }
-        .achievement-badge i { font-size: 16px; }
 
         @media (max-width: 768px) {
             .sidebar { right: -280px; }
@@ -455,7 +440,6 @@
             .report-controls { flex-direction: column; }
             .page-header { flex-direction: column; align-items: start; }
             .settings-grid { grid-template-columns: 1fr; }
-            .login-container { padding: 20px; }
             .quick-actions { grid-template-columns: repeat(2, 1fr); }
         }
 
@@ -465,40 +449,6 @@
         body.font-small { font-size: 14px; }
         body.font-medium { font-size: 16px; }
         body.font-large { font-size: 18px; }
-
-        /* ===== شريط التحميل Lazy Loading ===== */
-        .lazy-load {
-            opacity: 0;
-            transition: opacity 0.6s ease;
-        }
-        .lazy-load.loaded {
-            opacity: 1;
-        }
-
-        /* ===== صفحة المطور Dashboard ===== */
-        .dev-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .dev-stat-card {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-        .dev-stat-card .value {
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .dev-stat-card .label {
-            font-size: 13px;
-            color: var(--text-light);
-        }
-        .dev-stat-card .status-online { color: var(--success); }
-        .dev-stat-card .status-offline { color: var(--danger); }
     </style>
 </head>
 <body>
@@ -511,7 +461,7 @@
         <div class="login-container">
             <div class="login-header">
                 <h1><i class="fas fa-wallet"></i> فلوسي برو</h1>
-                <p class="subtitle">نظام مالي متكامل v6.0</p>
+                <p class="subtitle">نظام مالي متكامل v6.5</p>
             </div>
             <div class="login-tabs">
                 <button class="login-tab active" data-tab="login" onclick="switchLoginTab('login')">تسجيل الدخول</button>
@@ -642,6 +592,7 @@
             <a data-page="savings"><i class="fas fa-piggy-bank"></i> الادخار</a>
             <a data-page="visa"><i class="fas fa-credit-card"></i> فيزا المشتريات</a>
             <a data-page="associations"><i class="fas fa-hand-holding-heart"></i> الجمعيات</a>
+            <a data-page="charity"><i class="fas fa-hands-helping"></i> تجارة مع الله</a>
             <a data-page="obligations"><i class="fas fa-calendar-alt"></i> الالتزامات</a>
             <a data-page="family"><i class="fas fa-users"></i> الأسرة</a>
             <a data-page="debts"><i class="fas fa-handshake"></i> الديون</a>
@@ -681,6 +632,10 @@
                     <i class="fas fa-plus-circle"></i>
                     <span>إضافة عملية</span>
                 </div>
+                <div class="quick-action" onclick="navigateTo('charity')">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>تجارة مع الله</span>
+                </div>
                 <div class="quick-action" onclick="navigateTo('reports')">
                     <i class="fas fa-file-alt"></i>
                     <span>التقارير</span>
@@ -700,10 +655,10 @@
                 <div class="stat-card income-card"><div class="stat-icon"><i class="fas fa-arrow-up"></i></div><div class="stat-info"><h3>إجمالي الدخل</h3><p class="stat-value" id="totalIncome">0</p></div></div>
                 <div class="stat-card expense-card"><div class="stat-icon"><i class="fas fa-arrow-down"></i></div><div class="stat-info"><h3>إجمالي المصروفات</h3><p class="stat-value" id="totalExpense">0</p></div></div>
                 <div class="stat-card balance-card"><div class="stat-icon"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>الرصيد الحالي</h3><p class="stat-value" id="currentBalance">0</p></div></div>
-                <div class="stat-card transactions-card"><div class="stat-icon"><i class="fas fa-list"></i></div><div class="stat-info"><h3>عدد العمليات</h3><p class="stat-value" id="transactionCount">0</p></div></div>
+                <div class="stat-card charity-card"><div class="stat-icon" style="background:var(--gold);"><i class="fas fa-hands-helping"></i></div><div class="stat-info"><h3>تجارة مع الله</h3><p class="stat-value" id="totalCharity">0</p></div></div>
             </div>
 
-            <!-- العجز/الفائض -->
+            <!-- العجز/الفائض + ادخار -->
             <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                 <div class="stat-card" style="border-color:var(--success);">
                     <div class="stat-icon" style="background:var(--success);"><i class="fas fa-check-circle"></i></div>
@@ -717,9 +672,9 @@
                     <div class="stat-icon" style="background:var(--warning);"><i class="fas fa-piggy-bank"></i></div>
                     <div class="stat-info"><h3>إجمالي الادخار</h3><p class="stat-value" id="totalSavings">0</p></div>
                 </div>
-                <div class="stat-card" style="border-color:var(--purple);">
-                    <div class="stat-icon" style="background:var(--purple);"><i class="fas fa-credit-card"></i></div>
-                    <div class="stat-info"><h3>مشتريات فيزا</h3><p class="stat-value" id="totalVisa">0</p></div>
+                <div class="stat-card" style="border-color:var(--gold);">
+                    <div class="stat-icon" style="background:var(--gold);"><i class="fas fa-hand-holding-heart"></i></div>
+                    <div class="stat-info"><h3>شهرية تجارة مع الله</h3><p class="stat-value" id="monthlyCharity">0</p></div>
                 </div>
             </div>
 
@@ -748,6 +703,7 @@
                             <select id="txType" required>
                                 <option value="income">دخل</option>
                                 <option value="expense">مصروف</option>
+                                <option value="charity">تجارة مع الله</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -761,6 +717,23 @@
                         <div class="form-group" id="incomeSourceGroup">
                             <label><i class="fas fa-briefcase"></i> مصدر الدخل</label>
                             <select id="txIncomeSource"></select>
+                        </div>
+                        <div class="form-group" id="charityTypeGroup" style="display:none;">
+                            <label><i class="fas fa-hand-holding-heart"></i> نوع العمل الخيري</label>
+                            <select id="txCharityType">
+                                <option value="تبرع">تبرع</option>
+                                <option value="صدقة">صدقة</option>
+                                <option value="زكاة">زكاة</option>
+                                <option value="كفارة">كفارة</option>
+                                <option value="سد دين">سد دين</option>
+                                <option value="مساعدة">مساعدة</option>
+                                <option value="كفالة">كفالة</option>
+                                <option value="أخرى">أخرى</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="charityRecipientGroup" style="display:none;">
+                            <label><i class="fas fa-user"></i> المستفيد</label>
+                            <input type="text" id="txCharityRecipient" placeholder="اسم المستفيد">
                         </div>
                         <div class="form-group">
                             <label><i class="fas fa-door-open"></i> البوابة</label>
@@ -796,12 +769,12 @@
                     <div class="table-controls">
                         <input type="text" id="searchTransactions" placeholder="🔍 بحث...">
                         <select id="filterCategory"><option value="all">كل التصنيفات</option></select>
-                        <select id="filterType"><option value="all">الكل</option><option value="income">دخل</option><option value="expense">مصروف</option></select>
+                        <select id="filterType"><option value="all">الكل</option><option value="income">دخل</option><option value="expense">مصروف</option><option value="charity">تجارة مع الله</option></select>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>التصنيف</th><th>مصدر الدخل</th><th>البوابة</th><th>الحساب</th><th>الملاحظات</th><th>الإجراءات</th></tr></thead>
+                        <thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>التصنيف</th><th>مصدر الدخل</th><th>نوع الخيري</th><th>المستفيد</th><th>الحساب</th><th>الملاحظات</th><th>الإجراءات</th></tr></thead>
                         <tbody id="transactionsTableBody"></tbody>
                     </table>
                 </div>
@@ -856,6 +829,12 @@
                     <div class="form-grid">
                         <div class="form-group"><label>التصنيف</label><select id="budgetCategory" required></select></div>
                         <div class="form-group"><label>الحد الشهري</label><input type="number" id="budgetLimit" placeholder="المبلغ" required min="1" step="0.01"></div>
+                        <div class="form-group"><label>نوع الميزانية</label>
+                            <select id="budgetType">
+                                <option value="expense">مصروفات</option>
+                                <option value="charity">تجارة مع الله</option>
+                            </select>
+                        </div>
                     </div>
                     <button type="submit" class="btn-primary"><i class="fas fa-plus"></i> إضافة ميزانية</button>
                 </form>
@@ -938,6 +917,92 @@
                 </form>
             </div>
             <div id="associationsList"></div>
+        </section>
+
+        <!-- ===== تجارة مع الله ===== -->
+        <section id="charity" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-hands-helping"></i> تجارة مع الله</h1>
+                <span class="badge badge-gold">✨ أجر عظيم</span>
+            </div>
+
+            <!-- إحصائيات -->
+            <div class="stats-grid">
+                <div class="stat-card" style="border-color:var(--gold);">
+                    <div class="stat-icon" style="background:var(--gold);"><i class="fas fa-hand-holding-heart"></i></div>
+                    <div class="stat-info"><h3>إجمالي التبرعات</h3><p class="stat-value" id="charityTotal">0</p></div>
+                </div>
+                <div class="stat-card" style="border-color:var(--green);">
+                    <div class="stat-icon" style="background:var(--green);"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="stat-info"><h3>هذا الشهر</h3><p class="stat-value" id="charityMonthly">0</p></div>
+                </div>
+                <div class="stat-card" style="border-color:var(--purple);">
+                    <div class="stat-icon" style="background:var(--purple);"><i class="fas fa-users"></i></div>
+                    <div class="stat-info"><h3>عدد المستفيدين</h3><p class="stat-value" id="charityRecipients">0</p></div>
+                </div>
+                <div class="stat-card" style="border-color:var(--warning);">
+                    <div class="stat-icon" style="background:var(--warning);"><i class="fas fa-list"></i></div>
+                    <div class="stat-info"><h3>عدد العمليات</h3><p class="stat-value" id="charityCount">0</p></div>
+                </div>
+            </div>
+
+            <!-- إضافة -->
+            <div class="form-card">
+                <h3><i class="fas fa-plus-circle"></i> إضافة عملية خيرية</h3>
+                <form id="charityForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-hand-holding-heart"></i> النوع</label>
+                            <select id="charityType" required>
+                                <option value="تبرع">تبرع</option>
+                                <option value="صدقة">صدقة</option>
+                                <option value="زكاة">زكاة</option>
+                                <option value="كفارة">كفارة</option>
+                                <option value="سد دين">سد دين</option>
+                                <option value="مساعدة">مساعدة</option>
+                                <option value="كفالة">كفالة</option>
+                                <option value="أخرى">أخرى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-money-bill"></i> المبلغ</label>
+                            <input type="number" id="charityAmount" placeholder="المبلغ" required min="0.01" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> المستفيد</label>
+                            <input type="text" id="charityRecipient" placeholder="اسم المستفيد">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> التصنيف</label>
+                            <select id="charityCategory">
+                                <option value="عام">عام</option>
+                                <option value="تعليم">تعليم</option>
+                                <option value="صحة">صحة</option>
+                                <option value="إغاثة">إغاثة</option>
+                                <option value="كفالة يتيم">كفالة يتيم</option>
+                                <option value="بناء مسجد">بناء مسجد</option>
+                                <option value="أخرى">أخرى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-wallet"></i> الحساب</label>
+                            <select id="charityAccount"></select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar"></i> التاريخ</label>
+                            <input type="date" id="charityDate" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label><i class="fas fa-sticky-note"></i> ملاحظات</label>
+                            <input type="text" id="charityNotes" placeholder="ملاحظات اختيارية">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-gold"><i class="fas fa-hand-holding-heart"></i> سجل في تجارة مع الله</button>
+                </form>
+            </div>
+
+            <!-- عرض العمليات الخيرية -->
+            <div id="charityList"></div>
         </section>
 
         <!-- ===== الالتزامات ===== -->
@@ -1123,10 +1188,19 @@
                         <option value="all">كل التصنيفات</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>نوع العملية</label>
+                    <select id="reportTypeFilter">
+                        <option value="all">الكل</option>
+                        <option value="income">دخل</option>
+                        <option value="expense">مصروف</option>
+                        <option value="charity">تجارة مع الله</option>
+                    </select>
+                </div>
                 <button onclick="generateAdvancedReport()" class="btn-primary"><i class="fas fa-chart-bar"></i> عرض التقرير</button>
             </div>
 
-            <!-- مقارنة بين الفترات -->
+            <!-- مقارنة -->
             <div class="form-card">
                 <h3><i class="fas fa-exchange-alt"></i> مقارنة بين الفترات</h3>
                 <div class="form-grid">
@@ -1160,6 +1234,7 @@
                     <div class="report-stat"><h4>إجمالي الدخل</h4><p id="reportIncome">0</p></div>
                     <div class="report-stat"><h4>إجمالي المصروفات</h4><p id="reportExpense">0</p></div>
                     <div class="report-stat"><h4>صافي الربح</h4><p id="reportProfit">0</p></div>
+                    <div class="report-stat"><h4>التبرعات</h4><p id="reportCharity">0</p></div>
                     <div class="report-stat"><h4>نسبة الادخار</h4><p id="reportSavingsRate">0%</p></div>
                 </div>
                 <div class="report-actions">
@@ -1205,45 +1280,11 @@
         <!-- ===== لوحة المطور ===== -->
         <section id="developer" class="page">
             <div class="page-header"><h1><i class="fas fa-code"></i> لوحة المطور</h1></div>
-
-            <div class="dev-stats-grid">
-                <div class="dev-stat-card">
-                    <div class="value" id="devFirebaseStatus">✅</div>
-                    <div class="label">حالة Firebase</div>
-                </div>
-                <div class="dev-stat-card">
-                    <div class="value" id="devApiStatus">✅</div>
-                    <div class="label">حالة الـ API</div>
-                </div>
-                <div class="dev-stat-card">
-                    <div class="value" id="devServerStatus">✅</div>
-                    <div class="label">حالة السيرفر</div>
-                </div>
-                <div class="dev-stat-card">
-                    <div class="value" id="devLoadTime">0ms</div>
-                    <div class="label">سرعة التحميل</div>
-                </div>
-                <div class="dev-stat-card">
-                    <div class="value" id="devStorageUsed">0 KB</div>
-                    <div class="label">المساحة المستخدمة</div>
-                </div>
-                <div class="dev-stat-card">
-                    <div class="value" id="devTransactionCount">0</div>
-                    <div class="label">عدد العمليات</div>
-                </div>
-            </div>
-
+            <div class="dev-stats-grid" id="devStats"></div>
             <div class="form-card">
                 <h3><i class="fas fa-bug"></i> سجل الأخطاء (Error Log)</h3>
-                <div id="errorLog" style="max-height:300px;overflow-y:auto;background:var(--bg);padding:15px;border-radius:var(--radius);font-family:monospace;font-size:13px;direction:ltr;">
-                    <div style="color:var(--text-light);">لا توجد أخطاء مسجلة</div>
-                </div>
+                <div id="errorLog" style="max-height:300px;overflow-y:auto;background:var(--bg);padding:15px;border-radius:var(--radius);font-family:monospace;font-size:13px;direction:ltr;"></div>
                 <button onclick="clearErrorLog()" class="btn-danger" style="margin-top:10px;"><i class="fas fa-trash"></i> مسح السجل</button>
-            </div>
-
-            <div class="form-card">
-                <h3><i class="fas fa-database"></i> حالة التخزين</h3>
-                <div id="storageStatus"></div>
             </div>
         </section>
 
@@ -1283,7 +1324,7 @@
         }
 
         // ============================================================
-        // 1. نظام Toast للإشعارات
+        // 1. نظام Toast
         // ============================================================
         function showToast(message, type = 'info', duration = 3000) {
             const container = document.getElementById('toastContainer');
@@ -1309,7 +1350,7 @@
         }
 
         // ============================================================
-        // 2. نظام المستخدمين المتقدم
+        // 2. نظام المستخدمين
         // ============================================================
         const AUTH = {
             users: [],
@@ -1357,13 +1398,13 @@
                 if (password.length < 8) return { valid: false, message: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' };
                 const uniqueChars = new Set(password);
                 if (uniqueChars.size < 8) return { valid: false,
-                message: 'يجب أن تحتوي كلمة المرور على 8 أحرف مختلفة على الأقل' };
+                    message: 'يجب أن تحتوي كلمة المرور على 8 أحرف مختلفة على الأقل' };
                 return { valid: true };
             },
 
             login(username, password) {
                 const user = this.users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password ===
-                password);
+                    password);
                 if (user) { this.currentUser = user;
                     this.isLocked = false;
                     this.saveSession();
@@ -1433,67 +1474,7 @@
         };
 
         // ============================================================
-        // 3. نظام الإنجازات والتحديات
-        // ============================================================
-        const ACHIEVEMENTS = {
-            list: [
-                { id: 'first_transaction', name: '🌟 أول عملية', description: 'تسجيل أول عملية مالية', icon: 'fa-star' },
-                { id: 'ten_transactions', name: '📊 10 عمليات', description: 'تسجيل 10 عمليات مالية', icon: 'fa-chart-simple' },
-                { id: 'hundred_transactions', name: '🏆 100 عملية', description: 'تسجيل 100 عملية مالية', icon: 'fa-trophy' },
-                { id: 'savings_goal', name: '🐷 أول صندوق ادخار', description: 'إنشاء أول صندوق ادخار', icon: 'fa-piggy-bank' },
-                { id: 'budget_set', name: '🎯 أول ميزانية', description: 'تحديد أول ميزانية', icon: 'fa-bullseye' },
-                { id: 'subscription_tracker', name: '⏰ متتبع اشتراكات', description: 'إضافة أول اشتراك', icon: 'fa-clock' }
-            ],
-
-            check(userId) {
-                const user = AUTH.users.find(u => u.id === userId);
-                if (!user) return;
-                const transactions = DB.get('transactions');
-                const savings = DB.get('savings');
-                const budgets = DB.get('budgets');
-                const subscriptions = DB.get('subscriptions');
-                let newAchievements = [];
-
-                if (transactions.length >= 1 && !user.achievements.includes('first_transaction')) {
-                    newAchievements.push('first_transaction');
-                    showToast('🌟 أنجزت إنجاز: أول عملية مالية!', 'success');
-                }
-                if (transactions.length >= 10 && !user.achievements.includes('ten_transactions')) {
-                    newAchievements.push('ten_transactions');
-                    showToast('📊 أنجزت إنجاز: 10 عمليات مالية!', 'success');
-                }
-                if (transactions.length >= 100 && !user.achievements.includes('hundred_transactions')) {
-                    newAchievements.push('hundred_transactions');
-                    showToast('🏆 أنجزت إنجاز: 100 عملية مالية!', 'success');
-                }
-                if (savings.length >= 1 && !user.achievements.includes('savings_goal')) {
-                    newAchievements.push('savings_goal');
-                    showToast('🐷 أنجزت إنجاز: أول صندوق ادخار!', 'success');
-                }
-                if (budgets.length >= 1 && !user.achievements.includes('budget_set')) {
-                    newAchievements.push('budget_set');
-                    showToast('🎯 أنجزت إنجاز: أول ميزانية!', 'success');
-                }
-                if (subscriptions.length >= 1 && !user.achievements.includes('subscription_tracker')) {
-                    newAchievements.push('subscription_tracker');
-                    showToast('⏰ أنجزت إنجاز: أول اشتراك!', 'success');
-                }
-
-                if (newAchievements.length > 0) {
-                    user.achievements = [...user.achievements, ...newAchievements];
-                    user.points = (user.points || 0) + newAchievements.length * 10;
-                    // ترقية المستوى
-                    if (user.points >= 50) user.level = 2;
-                    if (user.points >= 150) user.level = 3;
-                    if (user.points >= 300) user.level = 4;
-                    if (user.points >= 500) user.level = 5;
-                    AUTH.saveUsers();
-                }
-            }
-        };
-
-        // ============================================================
-        // 4. إدارة البيانات
+        // 3. إدارة البيانات مع قسم تجارة مع الله
         // ============================================================
         const DB = {
             keys: {
@@ -1518,7 +1499,9 @@
                 Object.values(this.keys).forEach(k => { if (!localStorage.getItem(k)) localStorage.setItem(k, JSON
                         .stringify([])); });
                 if (!localStorage.getItem(this.keys.categories)) localStorage.setItem(this.keys.categories, JSON
-                    .stringify(['طعام', 'مواصلات', 'فواتير', 'إيجار', 'ترفيه', 'صحة', 'تعليم', 'ملابس', 'هدايا', 'أخرى']));
+                    .stringify(['طعام', 'مواصلات', 'فواتير', 'إيجار', 'ترفيه', 'صحة', 'تعليم', 'ملابس', 'هدايا', 'أخرى',
+                        'تجارة مع الله'
+                    ]));
                 if (!localStorage.getItem(this.keys.accounts)) localStorage.setItem(this.keys.accounts, JSON.stringify([
                         'نقدي', 'بنك', 'فودافون كاش', 'بطاقة ائتمان'
                     ]));
@@ -1528,11 +1511,7 @@
                         fontSize: 'medium',
                         currency: 'جنيه',
                         autoBackup: true,
-                        notifications: {
-                            email: '',
-                            telegram: '',
-                            viber: ''
-                        }
+                        notifications: { email: '', telegram: '', viber: '' }
                     }));
                 if (!localStorage.getItem(this.keys.incomeSources)) localStorage.setItem(this.keys.incomeSources, JSON
                     .stringify(['راتب حكومي', 'راتب خاص', 'تسويق', 'عمل حر', 'استثمار', 'هدايا', 'أخرى']));
@@ -1540,13 +1519,14 @@
             get(key) { return JSON.parse(localStorage.getItem(this.keys[key]) || '[]'); },
             set(key, data) { localStorage.setItem(this.keys[key], JSON.stringify(data)); },
 
-            addTransaction(t) { const d = this.get('transactions');
+            addTransaction(t) {
+                const d = this.get('transactions');
                 t.id = Date.now();
                 d.push(t);
                 this.set('transactions', d);
-                this.logActivity('إضافة عملية', `${t.type === 'income' ? 'دخل' : 'مصروف'} ${t.amount}`);
-                ACHIEVEMENTS.check(AUTH.currentUser?.id);
-                return t; },
+                this.logActivity('إضافة عملية', `${t.type === 'income' ? 'دخل' : t.type === 'charity' ? 'تجارة مع الله' : 'مصروف'} ${t.amount}`);
+                return t;
+            },
             deleteTransaction(id) { let d = this.get('transactions');
                 d = d.filter(t => t.id !== id);
                 this.set('transactions', d);
@@ -1560,9 +1540,7 @@
                 b.id = Date.now();
                 d.push(b);
                 this.set('budgets', d);
-                this.logActivity('إضافة ميزانية', `${b.category}`);
-                ACHIEVEMENTS.check(AUTH.currentUser?.id);
-                return b; },
+                this.logActivity('إضافة ميزانية', `${b.category}`); return b; },
             deleteBudget(id) { let d = this.get('budgets');
                 d = d.filter(b => b.id !== id);
                 this.set('budgets', d);
@@ -1573,9 +1551,7 @@
                 s.progress = (s.current / s.target) * 100;
                 d.push(s);
                 this.set('savings', d);
-                this.logActivity('إضافة ادخار', `${s.name}`);
-                ACHIEVEMENTS.check(AUTH.currentUser?.id);
-                return s; },
+                this.logActivity('إضافة ادخار', `${s.name}`); return s; },
             deleteSaving(id) { let d = this.get('savings');
                 d = d.filter(s => s.id !== id);
                 this.set('savings', d);
@@ -1611,9 +1587,7 @@
                 g.progress = (g.current / g.target) * 100;
                 d.push(g);
                 this.set('goals', d);
-                this.logActivity('إضافة هدف', `${g.name}`);
-                ACHIEVEMENTS.check(AUTH.currentUser?.id);
-                return g; },
+                this.logActivity('إضافة هدف', `${g.name}`); return g; },
             deleteGoal(id) { let d = this.get('goals');
                 d = d.filter(g => g.id !== id);
                 this.set('goals', d);
@@ -1628,9 +1602,7 @@
                 s.id = Date.now();
                 d.push(s);
                 this.set('subscriptions', d);
-                this.logActivity('إضافة اشتراك', `${s.name}`);
-                ACHIEVEMENTS.check(AUTH.currentUser?.id);
-                return s; },
+                this.logActivity('إضافة اشتراك', `${s.name}`); return s; },
             deleteSubscription(id) { let d = this.get('subscriptions');
                 d = d.filter(s => s.id !== id);
                 this.set('subscriptions', d);
@@ -1698,8 +1670,7 @@
             getActivityLog() { return this.get('activityLog'); },
             logActivity(action, details) { const d = this.get('activityLog');
                 d.unshift({ action, details, time: new Date().toISOString() }); if (d.length > 100) d.pop();
-                this.set('activityLog', d);
-                this.sendNotification('نشاط جديد', `${action}: ${details}`); },
+                this.set('activityLog', d); },
 
             backup() {
                 return {
@@ -1734,70 +1705,7 @@
         DB.init();
 
         // ============================================================
-        // 5. نظام الإشعارات (Email - Telegram - Viber)
-        // ============================================================
-        function sendNotification(title, message) {
-            const settings = DB.getSettings();
-            const notifications = settings.notifications || {};
-
-            // إشعار داخل التطبيق
-            showToast(`🔔 ${title}: ${message}`, 'info', 4000);
-
-            // إشعار بريد إلكتروني (محاكاة)
-            if (notifications.email) {
-                console.log(`📧 إرسال بريد إلكتروني إلى ${notifications.email}: ${title} - ${message}`);
-                // هنا يمكن إضافة تكامل مع EmailJS أو SMTP
-            }
-
-            // إشعار Telegram
-            if (notifications.telegram) {
-                console.log(`📨 إرسال Telegram إلى ${notifications.telegram}: ${title} - ${message}`);
-                // هنا يمكن إضافة تكامل مع Telegram Bot API
-            }
-
-            // إشعار Viber
-            if (notifications.viber) {
-                console.log(`📱 إرسال Viber إلى ${notifications.viber}: ${title} - ${message}`);
-                // هنا يمكن إضافة تكامل مع Viber API
-            }
-        }
-
-        // ============================================================
-        // 6. النسخ الاحتياطي التلقائي الشهري
-        // ============================================================
-        function checkMonthlyBackup() {
-            const settings = DB.getSettings();
-            if (!settings.autoBackup) return;
-
-            const lastBackup = localStorage.getItem('flosy_last_backup');
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-
-            if (lastBackup) {
-                const last = new Date(lastBackup);
-                if (last.getMonth() === currentMonth && last.getFullYear() === currentYear) {
-                    return; // تم النسخ هذا الشهر
-                }
-            }
-
-            // عمل نسخ احتياطي شهري
-            const data = DB.backup();
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `flosy_backup_${currentYear}-${String(currentMonth + 1).padStart(2, '0')}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-
-            localStorage.setItem('flosy_last_backup', now.toISOString());
-            showToast('📦 تم إنشاء نسخة احتياطية شهرية تلقائية', 'success');
-            DB.logActivity('نسخ احتياطي تلقائي', `شهر ${currentMonth + 1}/${currentYear}`);
-        }
-
-        // ============================================================
-        // 7. دوال مساعدة
+        // 4. دوال مساعدة
         // ============================================================
         function formatCurrency(amount) {
             const settings = DB.getSettings();
@@ -1806,14 +1714,31 @@
         }
 
         function getDateString(d) { if (!d) return ''; return new Date(d).toLocaleDateString('ar-EG'); }
-        function getTypeClass(t) { return t === 'income' ? 'amount-income' : 'amount-expense'; }
-        function getTypeLabel(t) { return t === 'income' ? 'دخل' : 'مصروف'; }
+        function getTypeClass(t) { return t === 'income' ? 'amount-income' : t === 'charity' ? 'amount-charity' :
+            'amount-expense'; }
+        function getTypeLabel(t) { return t === 'income' ? 'دخل' : t === 'charity' ? 'تجارة مع الله' : 'مصروف'; }
+        function getTypeBadge(t) { return t === 'income' ? 'filter-badge income' : t === 'charity' ? 'filter-badge charity' :
+                'filter-badge expense'; }
         function getStatusBadge(s) { const c = { 'مدفوع': 'success', 'غير مدفوع': 'warning', 'متأخر': 'danger' }; return `<span class="badge badge-${c[s]||''}">${s}</span>`; }
         function getObligationStatus(days) { if (days < 0) return { label: 'متأخر', class: 'danger' }; if (days <= 30) return { label: 'قريب', class: 'warning' }; return { label: 'بعيد', class: 'success' }; }
 
-        function getBalance() { return DB.get('transactions').reduce((s, t) => s + (t.type === 'income' ? t.amount : -t.amount), 0); }
-        function getTotalIncome() { return DB.get('transactions').filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0); }
-        function getTotalExpense() { return DB.get('transactions').filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0); }
+        function getBalance() { return DB.get('transactions').reduce((s, t) => s + (t.type === 'income' ? t.amount : -t
+                .amount), 0); }
+        function getTotalIncome() { return DB.get('transactions').filter(t => t.type === 'income').reduce((s, t) => s + t
+                .amount, 0); }
+        function getTotalExpense() { return DB.get('transactions').filter(t => t.type === 'expense').reduce((s, t) => s + t
+                .amount, 0); }
+        function getTotalCharity() { return DB.get('transactions').filter(t => t.type === 'charity').reduce((s, t) => s + t
+                .amount, 0); }
+        function getMonthlyCharity() {
+            const now = new Date();
+            const month = now.getMonth(),
+                year = now.getFullYear();
+            return DB.get('transactions').filter(t => {
+                const d = new Date(t.date);
+                return t.type === 'charity' && d.getMonth() === month && d.getFullYear() === year;
+            }).reduce((s, t) => s + t.amount, 0);
+        }
 
         function logError(source, message) {
             errorLog.push({ source, message, time: new Date().toISOString() });
@@ -1822,7 +1747,7 @@
         }
 
         // ============================================================
-        // 8. دوال تسجيل الدخول
+        // 5. دوال تسجيل الدخول
         // ============================================================
         function switchLoginTab(tab) {
             document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
@@ -1833,7 +1758,6 @@
 
         function showForgotPassword() {
             document.getElementById('forgotPasswordScreen').style.display = 'flex';
-            // تعبئة أسئلة الأمان
             const select = document.getElementById('forgotSecurityQuestion');
             const users = AUTH.users;
             const questions = [...new Set(users.map(u => u.securityQuestion))];
@@ -1850,7 +1774,6 @@
             const username = document.getElementById('forgotUsername').value.trim();
             const question = document.getElementById('forgotSecurityQuestion').value;
             const answer = document.getElementById('forgotSecurityAnswer').value.trim();
-
             const result = AUTH.resetPassword(username, answer);
             if (result.success) {
                 document.getElementById('forgotError').textContent = '';
@@ -1919,7 +1842,7 @@
         }
 
         // ============================================================
-        // 9. القفل السريع
+        // 6. القفل السريع
         // ============================================================
         function quickLock() {
             AUTH.isLocked = true;
@@ -1942,7 +1865,7 @@
         }
 
         // ============================================================
-        // 10. دوال التنقل السريع
+        // 7. دوال التنقل
         // ============================================================
         function navigateTo(page) {
             document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
@@ -1953,295 +1876,21 @@
         }
 
         // ============================================================
-        // 11. التقارير المتقدمة
-        // ============================================================
-        function generateAdvancedReport() {
-            const period = document.getElementById('reportPeriod').value;
-            const year = parseInt(document.getElementById('reportYear').value);
-            const periodSelect = parseInt(document.getElementById('reportPeriodSelect').value);
-            const category = document.getElementById('reportCategory').value;
-
-            let startDate, endDate;
-            const now = new Date();
-
-            switch (period) {
-                case 'month':
-                    startDate = new Date(year, periodSelect - 1, 1);
-                    endDate = new Date(year, periodSelect, 0);
-                    break;
-                case 'quarter':
-                    const quarterStart = (periodSelect - 1) * 3;
-                    startDate = new Date(year, quarterStart, 1);
-                    endDate = new Date(year, quarterStart + 3, 0);
-                    break;
-                case 'half':
-                    const halfStart = (periodSelect - 1) * 6;
-                    startDate = new Date(year, halfStart, 1);
-                    endDate = new Date(year, halfStart + 6, 0);
-                    break;
-                case 'year':
-                    startDate = new Date(year, 0, 1);
-                    endDate = new Date(year, 11, 31);
-                    break;
-                case 'custom':
-                    startDate = new Date(document.getElementById('reportStartDate').value);
-                    endDate = new Date(document.getElementById('reportEndDate').value);
-                    break;
-                default:
-                    startDate = new Date(year, periodSelect - 1, 1);
-                    endDate = new Date(year, periodSelect, 0);
-            }
-
-            const transactions = DB.get('transactions');
-            let filtered = transactions.filter(t => {
-                const d = new Date(t.date);
-                if (d < startDate || d > endDate) return false;
-                if (category !== 'all' && t.category !== category) return false;
-                return true;
-            });
-
-            const income = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-            const expense = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-            const profit = income - expense;
-            const savings = DB.get('savings').reduce((s, item) => s + item.current, 0);
-            const savingsRate = income > 0 ? (savings / income) * 100 : 0;
-
-            document.getElementById('reportIncome').textContent = formatCurrency(income);
-            document.getElementById('reportExpense').textContent = formatCurrency(expense);
-            document.getElementById('reportProfit').textContent = formatCurrency(profit);
-            document.getElementById('reportProfit').style.color = profit >= 0 ? '#22c55e' : '#ef4444';
-            document.getElementById('reportSavingsRate').textContent = savingsRate.toFixed(1) + '%';
-
-            let html = `
-                <div class="report-summary">
-                    <div class="report-stat"><h4>إجمالي الدخل</h4><p style="color:#22c55e">${formatCurrency(income)}</p></div>
-                    <div class="report-stat"><h4>إجمالي المصروفات</h4><p style="color:#ef4444">${formatCurrency(expense)}</p></div>
-                    <div class="report-stat"><h4>صافي الربح</h4><p style="color:${profit>=0?'#22c55e':'#ef4444'}">${formatCurrency(profit)}</p></div>
-                    <div class="report-stat"><h4>نسبة الادخار</h4><p style="color:${savingsRate >= 20 ? '#22c55e' : '#ef4444'}">${savingsRate.toFixed(1)}%</p></div>
-                </div>
-            `;
-
-            // توزيع المصروفات حسب التصنيف
-            const summary = filtered.filter(t => t.type === 'expense').reduce((acc, t) => {
-                acc[t.category] = (acc[t.category] || 0) + t.amount;
-                return acc;
-            }, {});
-
-            html += `<div style="margin-top:20px"><h4>📊 توزيع المصروفات حسب التصنيف</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px">`;
-            if (Object.keys(summary).length === 0) html += '<p style="color:var(--text-light)">لا توجد بيانات</p>';
-            else html += Object.entries(summary).sort((a, b) => b[1] - a[1]).map(([cat, amt]) =>
-                `<div style="background:var(--bg);padding:10px;border-radius:8px;text-align:center"><strong>${cat}</strong><p style="color:var(--text-light)">${formatCurrency(amt)}</p></div>`
-            ).join('');
-            html += `</div></div>`;
-
-            // جدول العمليات
-            if (filtered.length > 0) {
-                html += `<div style="margin-top:20px"><h4>📋 العمليات</h4><div class="table-responsive"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>التصنيف</th><th>الحساب</th></tr></thead><tbody>`;
-                html += filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 100).map(t =>
-                    `<tr><td>${getDateString(t.date)}</td><td><span class="filter-badge ${t.type}">${getTypeLabel(t.type)}</span></td><td class="${getTypeClass(t.type)}">${formatCurrency(t.amount)}</td><td>${t.category}</td><td>${t.account||'نقدي'}</td></tr>`
-                ).join('');
-                html += `</tbody></table></div></div>`;
-            }
-
-            document.getElementById('reportContent').innerHTML = html;
-            window._reportData = { income, expense, profit, savingsRate, transactions: filtered };
-        }
-
-        // ============================================================
-        // 12. مقارنة بين الفترات
-        // ============================================================
-        function generateComparison() {
-            const period1 = parseInt(document.getElementById('comparePeriod1').value);
-            const period2 = parseInt(document.getElementById('comparePeriod2').value);
-
-            const now = new Date();
-            const endDate1 = new Date(now);
-            const startDate1 = new Date(now);
-            startDate1.setMonth(startDate1.getMonth() - period1);
-
-            const endDate2 = new Date(startDate1);
-            const startDate2 = new Date(startDate1);
-            startDate2.setMonth(startDate2.getMonth() - period2);
-
-            const transactions = DB.get('transactions');
-
-            const getPeriodData = (start, end) => {
-                const filtered = transactions.filter(t => {
-                    const d = new Date(t.date);
-                    return d >= start && d <= end;
-                });
-                const income = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-                const expense = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-                return { income, expense, profit: income - expense, count: filtered.length };
-            };
-
-            const data1 = getPeriodData(startDate1, endDate1);
-            const data2 = getPeriodData(startDate2, endDate2);
-
-            const incomeChange = data2.income > 0 ? ((data1.income - data2.income) / data2.income * 100) : 0;
-            const expenseChange = data2.expense > 0 ? ((data1.expense - data2.expense) / data2.expense * 100) : 0;
-            const profitChange = data2.profit > 0 ? ((data1.profit - data2.profit) / data2.profit * 100) : 0;
-
-            const container = document.getElementById('comparisonResult');
-            container.innerHTML = `
-                <div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;">
-                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
-                        <h4>📈 التغير في الدخل</h4>
-                        <p style="font-size:24px;color:${incomeChange >= 0 ? 'var(--success)' : 'var(--danger)'}">
-                            ${incomeChange >= 0 ? '+' : ''}${incomeChange.toFixed(1)}%
-                        </p>
-                        <p style="font-size:13px;color:var(--text-light);">
-                            ${formatCurrency(data2.income)} → ${formatCurrency(data1.income)}
-                        </p>
-                    </div>
-                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
-                        <h4>📉 التغير في المصروفات</h4>
-                        <p style="font-size:24px;color:${expenseChange <= 0 ? 'var(--success)' : 'var(--danger)'}">
-                            ${expenseChange >= 0 ? '+' : ''}${expenseChange.toFixed(1)}%
-                        </p>
-                        <p style="font-size:13px;color:var(--text-light);">
-                            ${formatCurrency(data2.expense)} → ${formatCurrency(data1.expense)}
-                        </p>
-                    </div>
-                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
-                        <h4>💹 التغير في صافي الربح</h4>
-                        <p style="font-size:24px;color:${profitChange >= 0 ? 'var(--success)' : 'var(--danger)'}">
-                            ${profitChange >= 0 ? '+' : ''}${profitChange.toFixed(1)}%
-                        </p>
-                        <p style="font-size:13px;color:var(--text-light);">
-                            ${formatCurrency(data2.profit)} → ${formatCurrency(data1.profit)}
-                        </p>
-                    </div>
-                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
-                        <h4>📊 عدد العمليات</h4>
-                        <p style="font-size:24px;">${data2.count} → ${data1.count}</p>
-                        <p style="font-size:13px;color:var(--text-light);">
-                            ${((data1.count - data2.count) / (data2.count || 1) * 100).toFixed(1)}% تغير
-                        </p>
-                    </div>
-                </div>
-            `;
-        }
-
-        // ============================================================
-        // 13. تصدير التقارير
-        // ============================================================
-        function exportReportPDF() {
-            const el = document.getElementById('reportContent');
-            if (!el || el.innerHTML.trim() === '') { showToast('الرجاء إنشاء تقرير أولاً', 'warning'); return; }
-
-            // إضافة ترويسة للتقرير
-            const title = document.createElement('div');
-            title.style.cssText = 'text-align:center;padding:20px;border-bottom:2px solid #2563eb;margin-bottom:20px;';
-            title.innerHTML = `
-                <h1 style="color:#2563eb;font-size:28px;">💰 فلوسي - تقرير مالي</h1>
-                <p style="color:#64748b;">${new Date().toLocaleDateString('ar-EG')}</p>
-                <p style="color:#64748b;">${AUTH.currentUser?.username || 'مدير النظام'}</p>
-            `;
-
-            const footer = document.createElement('div');
-            footer.style.cssText =
-            'text-align:center;padding:20px;border-top:2px solid #e2e8f0;margin-top:20px;color:#94a3b8;font-size:12px;';
-            footer.textContent = 'تم إنشاء التقرير بواسطة فلوسي - النظام المالي المنزلي';
-
-            const container = document.createElement('div');
-            container.style.cssText = 'padding:20px;background:white;';
-            container.appendChild(title);
-            container.appendChild(el.cloneNode(true));
-            container.appendChild(footer);
-
-            html2pdf().set({
-                margin: 10,
-                filename: `flosy_report_${new Date().toISOString().split('T')[0]}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).from(container).save();
-
-            showToast('📄 تم تصدير التقرير كـ PDF', 'success');
-        }
-
-        function exportReportExcel() {
-            if (!window._reportData) { showToast('الرجاء إنشاء تقرير أولاً', 'warning'); return; }
-            const data = window._reportData.transactions.map(t => ({
-                'التاريخ': getDateString(t.date),
-                'النوع': getTypeLabel(t.type),
-                'المبلغ': t.amount,
-                'التصنيف': t.category,
-                'مصدر الدخل': t.incomeSource || '-',
-                'البوابة': t.portal || '-',
-                'الحساب': t.account || 'نقدي',
-                'الملاحظات': t.notes || ''
-            }));
-            if (data.length === 0) { showToast('لا توجد بيانات لتصديرها', 'warning'); return; }
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'التقرير');
-            XLSX.writeFile(wb, `flosy_report_${new Date().toISOString().split('T')[0]}.xlsx`);
-            showToast('📊 تم تصدير التقرير كـ Excel', 'success');
-        }
-
-        function exportReportPPT() {
-            if (!window._reportData) { showToast('الرجاء إنشاء تقرير أولاً', 'warning'); return; }
-            const data = window._reportData;
-            let html = `
-                <html><head><meta charset="UTF-8"><title>تقرير فلوسي</title>
-                <style>
-                    body { font-family: 'Tajawal', Arial, sans-serif; direction: rtl; padding: 20px; }
-                    h1 { color: #2563eb; text-align: center; }
-                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                    th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
-                    th { background: #f1f5f9; }
-                    .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
-                    .summary-item { background: #f1f5f9; padding: 15px; border-radius: 8px; text-align: center; }
-                </style>
-                </head>
-                <body>
-                <h1>💰 تقرير فلوسي المالي</h1>
-                <p style="text-align:center;">تاريخ التقرير: ${new Date().toLocaleDateString('ar-EG')}</p>
-                <div class="summary">
-                    <div class="summary-item"><h3>الدخل</h3><p style="color:#22c55e;font-size:24px;">${formatCurrency(data.income)}</p></div>
-                    <div class="summary-item"><h3>المصروفات</h3><p style="color:#ef4444;font-size:24px;">${formatCurrency(data.expense)}</p></div>
-                    <div class="summary-item"><h3>صافي الربح</h3><p style="color:${data.profit >= 0 ? '#22c55e' : '#ef4444'};font-size:24px;">${formatCurrency(data.profit)}</p></div>
-                    <div class="summary-item"><h3>عدد العمليات</h3><p style="font-size:24px;">${data.transactions.length}</p></div>
-                </div>
-                <h3>📊 توزيع المصروفات</h3>
-                <table><thead><tr><th>التصنيف</th><th>المبلغ</th></tr></thead><tbody>
-                ${Object.entries(data.transactions.filter(t => t.type === 'expense').reduce((acc, t) => { acc[t.category] = (acc[t.category] || 0) + t.amount; return acc; }, {})).sort((a,b) => b[1]-a[1]).map(([c, amt]) => `
-                    <tr><td>${c}</td><td>${formatCurrency(amt)}</td></tr>
-                `).join('')}
-                </tbody></table>
-                <h3>📋 تفاصيل العمليات</h3>
-                <table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>التصنيف</th></tr></thead><tbody>
-                ${data.transactions.slice(0, 50).map(t => `
-                    <tr><td>${getDateString(t.date)}</td><td>${getTypeLabel(t.type)}</td><td>${formatCurrency(t.amount)}</td><td>${t.category}</td></tr>
-                `).join('')}
-                </tbody></table>
-                <p style="text-align:center;margin-top:20px;color:#94a3b8;font-size:12px;">تم إنشاء التقرير بواسطة فلوسي</p>
-                </body></html>
-            `;
-            const blob = new Blob([html], { type: 'application/vnd.ms-powerpoint' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `flosy_report_${new Date().toISOString().split('T')[0]}.ppt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('📊 تم تصدير التقرير كـ PowerPoint', 'success');
-        }
-
-        // ============================================================
-        // 14. دوال التحديث (Dashboard)
+        // 8. دوال التحديث (Dashboard)
         // ============================================================
         function updateDashboard() {
             const transactions = DB.get('transactions');
             const totalIncome = getTotalIncome();
             const totalExpense = getTotalExpense();
             const balance = getBalance();
+            const totalCharity = getTotalCharity();
+            const monthlyCharity = getMonthlyCharity();
 
             document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
             document.getElementById('totalExpense').textContent = formatCurrency(totalExpense);
             document.getElementById('currentBalance').textContent = formatCurrency(balance);
-            document.getElementById('transactionCount').textContent = transactions.length;
+            document.getElementById('totalCharity').textContent = formatCurrency(totalCharity);
+            document.getElementById('monthlyCharity').textContent = formatCurrency(monthlyCharity);
 
             // العجز/الفائض
             const surplus = calculateMonthlySurplus();
@@ -2263,7 +1912,6 @@
             // فيزا
             const visa = DB.get('visa');
             const totalVisa = visa.reduce((s, item) => s + item.total, 0);
-            document.getElementById('totalVisa').textContent = formatCurrency(totalVisa);
             document.getElementById('totalVisaDisplay').textContent = formatCurrency(totalVisa);
             document.getElementById('visaDueCount').textContent = visa.length;
 
@@ -2273,19 +1921,17 @@
             updateCashFlowChart(transactions);
             updateRecentTransactions(transactions);
             updateObligationsSummary();
-
-            // تحديث لوحة المطور
             updateDeveloperDashboard();
         }
 
         function calculateMonthlySurplus() {
             const now = new Date();
-            const month = now.getMonth();
-            const year = now.getFullYear();
+            const month = now.getMonth(),
+                year = now.getFullYear();
             const transactions = DB.get('transactions');
             const monthlyIncome = transactions.filter(t => {
                 const d = new Date(t.date);
-                return t.type === 'income' && d.getMonth() === month && d.getFullYear() === year;
+                return (t.type === 'income' || t.type === 'charity') && d.getMonth() === month && d.getFullYear() === year;
             }).reduce((s, t) => s + t.amount, 0);
             const monthlyExpense = transactions.filter(t => {
                 const d = new Date(t.date);
@@ -2295,7 +1941,7 @@
         }
 
         // ============================================================
-        // 15. التنبيهات الذكية
+        // 9. التنبيهات الذكية
         // ============================================================
         function generateAlerts() {
             const transactions = DB.get('transactions');
@@ -2306,12 +1952,12 @@
                 year = now.getFullYear();
             const monthlyExpenses = transactions.filter(t => {
                 const d = new Date(t.date);
-                return t.type === 'expense' && d.getMonth() === month && d.getFullYear() === year;
+                return (t.type === 'expense' || t.type === 'charity') && d.getMonth() === month && d.getFullYear() === year;
             });
 
-            // تنبيهات الميزانيات
             budgets.forEach(b => {
-                const spent = monthlyExpenses.filter(t => t.category === b.category).reduce((s, t) => s + t.amount, 0);
+                const spent = monthlyExpenses.filter(t => t.category === b.category).reduce((s, t) => s + t.amount,
+                0);
                 const p = (spent / b.limit) * 100;
                 if (p >= 90) alerts.push({ type: 'danger', icon: 'fa-exclamation-triangle',
                     message: `⚠️ تجاوزت ميزانية "${b.category}" ${p.toFixed(0)}%` });
@@ -2319,7 +1965,6 @@
                     message: `⚡ ميزانية "${b.category}" قاربت على الانتهاء (${p.toFixed(0)}%)` });
             });
 
-            // تنبيهات الاشتراكات المتكررة
             const subscriptions = DB.get('subscriptions');
             subscriptions.forEach(s => {
                 const due = new Date(s.dueDate);
@@ -2329,11 +1974,11 @@
                 else if (diff <= 3 && diff >= 0 && s.status !== 'مدفوع') alerts.push({ type: 'warning',
                     icon: 'fa-clock', message: `⏰ اشتراك "${s.name}" مستحق خلال ${diff} يوم` });
                 if (s.recurring && s.recurring !== 'لا') {
-                    alerts.push({ type: 'info', icon: 'fa-sync', message: `🔄 اشتراك "${s.name}" متكرر (${s.recurring})` });
+                    alerts.push({ type: 'info', icon: 'fa-sync',
+                        message: `🔄 اشتراك "${s.name}" متكرر (${s.recurring})` });
                 }
             });
 
-            // تنبيهات الالتزامات
             const obligations = DB.get('obligations');
             obligations.forEach(o => {
                 const due = new Date(o.dueDate);
@@ -2342,63 +1987,49 @@
                     message: `📅 التزام "${o.name}" خلال ${diff} يوم (${formatCurrency(o.amount)})` });
             });
 
+            // تذكير بالتبرع الشهري
+            const monthlyCharity = getMonthlyCharity();
+            if (monthlyCharity > 0) {
+                alerts.push({ type: 'success', icon: 'fa-hands-helping',
+                    message: `🤲 هذا الشهر تبرعت ${formatCurrency(monthlyCharity)} في تجارة مع الله` });
+            } else {
+                alerts.push({ type: 'info', icon: 'fa-hands-helping',
+                    message: `💡 لم تسجل أي تبرعات هذا الشهر، جرب تجارة مع الله` });
+            }
+
             const bal = getBalance();
             if (bal < 0) alerts.push({ type: 'danger', icon: 'fa-exclamation-triangle',
                 message: `❗ رصيدك سالب (${formatCurrency(bal)})` });
-
-            // إنجازات وتحديات
-            const user = AUTH.currentUser;
-            if (user) {
-                // تحديات شهرية
-                const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-                const monthTransactions = transactions.filter(t => new Date(t.date) >= monthStart);
-                const monthIncome = monthTransactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-                const monthExpense = monthTransactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-                const savingsRate = monthIncome > 0 ? ((monthIncome - monthExpense) / monthIncome * 100) : 0;
-
-                if (savingsRate >= 20) {
-                    alerts.push({ type: 'success', icon: 'fa-star',
-                        message: `🌟 تحدي الشهر: وفرت ${savingsRate.toFixed(0)}% من دخلك!` });
-                }
-
-                // عرض الإنجازات
-                if (user.achievements && user.achievements.length > 0) {
-                    const unlocked = ACHIEVEMENTS.list.filter(a => user.achievements.includes(a.id));
-                    if (unlocked.length > 0) {
-                        alerts.push({ type: 'info', icon: 'fa-trophy',
-                            message: `🏆 لديك ${unlocked.length} إنجاز${unlocked.length > 1 ? 'ات' : ''}: ${unlocked.map(a => a.name).join(', ')}` });
-                    }
-                }
-            }
 
             const c = document.getElementById('alertsContainer');
             if (alerts.length === 0) {
                 c.innerHTML = `<div class="alert-item success"><i class="fas fa-check-circle"></i> ✅ الوضع المالي مستقر</div>`;
             } else {
-                c.innerHTML = alerts.slice(0, 10).map(a => `<div class="alert-item ${a.type}"><i class="fas ${a.icon}"></i> ${a.message}</div>`)
-                    .join('');
+                c.innerHTML = alerts.slice(0, 10).map(a =>
+                    `<div class="alert-item ${a.type}"><i class="fas ${a.icon}"></i> ${a.message}</div>`
+                ).join('');
             }
         }
 
         // ============================================================
-        // 16. الرسوم البيانية
+        // 10. الرسوم البيانية
         // ============================================================
         function updateExpenseChart(transactions) {
-            const expenses = transactions.filter(t => t.type === 'expense');
+            const expenses = transactions.filter(t => t.type === 'expense' || t.type === 'charity');
             const cats = DB.getCategories();
-            const data = cats.map(c => ({ category: c, total: expenses.filter(t => t.category === c).reduce((s, t) => s + t
-                        .amount, 0) })).filter(d => d.total > 0);
+            const data = cats.map(c => ({ category: c, total: expenses.filter(t => t.category === c).reduce((s, t) => s +
+                        t.amount, 0) })).filter(d => d.total > 0);
             const ctx = document.getElementById('expenseChart').getContext('2d');
             if (window.expenseChartInstance) window.expenseChartInstance.destroy();
             if (data.length === 0) {
                 window.expenseChartInstance = new Chart(ctx, {
                     type: 'doughnut',
-                    data: { labels: ['لا توجد مصروفات'], datasets: [{ data: [1], backgroundColor: ['#e2e8f0'] }] },
+                    data: { labels: ['لا توجد بيانات'], datasets: [{ data: [1], backgroundColor: ['#e2e8f0'] }] },
                     options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
                 });
                 return;
             }
-            const colors = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+            const colors = ['#22c55e', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#fbbf24', '#14b8a6'];
             window.expenseChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -2429,8 +2060,9 @@
             transactions.forEach(t => {
                 const d = new Date(t.date);
                 const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
-                if (!monthly[key]) monthly[key] = { income: 0, expense: 0 };
+                if (!monthly[key]) monthly[key] = { income: 0, expense: 0, charity: 0 };
                 if (t.type === 'income') monthly[key].income += t.amount;
+                else if (t.type === 'charity') monthly[key].charity += t.amount;
                 else monthly[key].expense += t.amount;
             });
             const keys = Object.keys(monthly).sort();
@@ -2443,7 +2075,8 @@
                         labels: ['لا توجد بيانات'],
                         datasets: [
                             { label: 'الدخل', data: [0], borderColor: '#22c55e' },
-                            { label: 'المصروفات', data: [0], borderColor: '#ef4444' }
+                            { label: 'المصروفات', data: [0], borderColor: '#ef4444' },
+                            { label: 'تجارة مع الله', data: [0], borderColor: '#fbbf24' }
                         ]
                     },
                     options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
@@ -2458,7 +2091,9 @@
                         { label: 'الدخل', data: keys.map(k => monthly[k].income), borderColor: '#22c55e',
                             backgroundColor: 'rgba(34,197,94,0.1)', fill: true, tension: 0.4 },
                         { label: 'المصروفات', data: keys.map(k => monthly[k].expense), borderColor: '#ef4444',
-                            backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.4 }
+                            backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.4 },
+                        { label: 'تجارة مع الله', data: keys.map(k => monthly[k].charity), borderColor: '#fbbf24',
+                            backgroundColor: 'rgba(251,191,36,0.1)', fill: true, tension: 0.4 }
                     ]
                 },
                 options: {
@@ -2479,52 +2114,100 @@
             });
         }
 
-        function updateRecentTransactions(transactions) {
-            const recent = transactions.slice(-5).reverse();
-            const c = document.getElementById('recentTransactions');
-            if (recent.length === 0) {
-                c.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i>لا توجد عمليات مسجلة</div>';
+        // ============================================================
+        // 11. الميزانيات
+        // ============================================================
+        function loadBudgets() {
+            const budgets = DB.get('budgets');
+            const transactions = DB.get('transactions');
+            const now = new Date();
+            const month = now.getMonth(),
+                year = now.getFullYear();
+            const monthlySpending = transactions.filter(t => {
+                const d = new Date(t.date);
+                return (t.type === 'expense' || t.type === 'charity') && d.getMonth() === month && d.getFullYear() ===
+                    year;
+            });
+            const c = document.getElementById('budgetsList');
+            if (budgets.length === 0) {
+                c.innerHTML =
+                    `<div class="empty-state"><i class="fas fa-bullseye"></i>لا توجد ميزانيات مسجلة<br><small>أضف ميزانية لبدء التتبع</small></div>`;
                 return;
             }
-            c.innerHTML =
-                `<div class="table-responsive"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>التصنيف</th></tr></thead><tbody>${recent.map(t => `<tr><td>${getDateString(t.date)}</td><td><span class="filter-badge ${t.type}">${getTypeLabel(t.type)}</span></td><td class="${getTypeClass(t.type)}">${formatCurrency(t.amount)}</td><td>${t.category}</td></tr>`).join('')}</tbody></table></div>`;
+            c.innerHTML = budgets.map(b => {
+                const spent = monthlySpending.filter(t => t.category === b.category).reduce((s, t) => s + t.amount,
+                0);
+                const p = Math.min((spent / b.limit) * 100, 100);
+                const cls = p >= 90 ? 'danger' : p >= 70 ? 'warning' : 'success';
+                return `<div class="budget-card">
+                    <div class="info">
+                        <h4>${b.category}</h4>
+                        <p>${formatCurrency(spent)} من ${formatCurrency(b.limit)} (${p.toFixed(0)}%) - المتبقي: ${formatCurrency(Math.max(b.limit - spent, 0))}</p>
+                        <div class="progress-bar"><div class="progress-fill ${cls}" style="width:${p}%"></div></div>
+                    </div>
+                    <button class="btn-danger" onclick="deleteBudget(${b.id})" style="padding:6px 12px"><i class="fas fa-trash"></i></button>
+                </div>`;
+            }).join('');
         }
 
-        function updateObligationsSummary() {
-            const obligations = DB.get('obligations');
-            const now = new Date();
-            const summary = document.getElementById('obligationsSummary');
-            if (!summary) return;
-
-            const soon30 = obligations.filter(o => { const diff = Math.ceil((new Date(o.dueDate) - now) / (1000 * 60 * 60 *
-                    24)); return diff >= 0 && diff <= 30; });
-            const soon90 = obligations.filter(o => { const diff = Math.ceil((new Date(o.dueDate) - now) / (1000 * 60 * 60 *
-                    24)); return diff >= 0 && diff <= 90; });
-            const soonYear = obligations.filter(o => { const diff = Math.ceil((new Date(o.dueDate) - now) / (1000 * 60 * 60 *
-                    24)); return diff >= 0 && diff <= 365; });
-
-            summary.innerHTML = `
-                <div class="stat-card" style="border-color:var(--warning);">
-                    <div class="stat-icon" style="background:var(--warning);"><i class="fas fa-calendar-day"></i></div>
-                    <div class="stat-info"><h3>خلال 30 يوم</h3><p class="stat-value">${formatCurrency(soon30.reduce((s,o) => s + o.amount, 0))}</p><small>${soon30.length} التزام</small></div>
-                </div>
-                <div class="stat-card" style="border-color:var(--info);">
-                    <div class="stat-icon" style="background:var(--info);"><i class="fas fa-calendar-week"></i></div>
-                    <div class="stat-info"><h3>خلال 90 يوم</h3><p class="stat-value">${formatCurrency(soon90.reduce((s,o) => s + o.amount, 0))}</p><small>${soon90.length} التزام</small></div>
-                </div>
-                <div class="stat-card" style="border-color:var(--secondary);">
-                    <div class="stat-icon" style="background:var(--secondary);"><i class="fas fa-calendar-alt"></i></div>
-                    <div class="stat-info"><h3>خلال سنة</h3><p class="stat-value">${formatCurrency(soonYear.reduce((s,o) => s + o.amount, 0))}</p><small>${soonYear.length} التزام</small></div>
-                </div>
-            `;
+        function deleteBudget(id) {
+            if (confirm('هل أنت متأكد من حذف هذه الميزانية؟')) {
+                DB.deleteBudget(id);
+                loadBudgets();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
+                showToast('🗑️ تم حذف الميزانية', 'warning');
+            }
         }
 
         // ============================================================
-        // 17. العمليات
+        // 12. تجارة مع الله
+        // ============================================================
+        function loadCharity() {
+            const transactions = DB.get('transactions').filter(t => t.type === 'charity').sort((a, b) => b.id - a.id);
+            const total = transactions.reduce((s, t) => s + t.amount, 0);
+            const monthly = getMonthlyCharity();
+            const recipients = new Set(transactions.map(t => t.recipient || 'غير محدد'));
+
+            document.getElementById('charityTotal').textContent = formatCurrency(total);
+            document.getElementById('charityMonthly').textContent = formatCurrency(monthly);
+            document.getElementById('charityRecipients').textContent = recipients.size;
+            document.getElementById('charityCount').textContent = transactions.length;
+
+            const c = document.getElementById('charityList');
+            if (transactions.length === 0) {
+                c.innerHTML =
+                    `<div class="empty-state"><i class="fas fa-hands-helping"></i>لا توجد عمليات خيرية<br><small>ابدأ في تجارة مع الله اليوم</small></div>`;
+                return;
+            }
+            c.innerHTML = transactions.slice(0, 50).map(t => `
+                <div class="charity-card">
+                    <div class="info">
+                        <h4>${t.charityType || 'تبرع'} <span class="badge badge-gold">${t.category || 'عام'}</span></h4>
+                        <p>${formatCurrency(t.amount)} - ${getDateString(t.date)}</p>
+                        <p>المستفيد: ${t.recipient || 'غير محدد'} | الحساب: ${t.account || 'نقدي'}</p>
+                        <p style="font-size:12px;color:var(--text-light);">${t.notes || ''}</p>
+                    </div>
+                    <button class="btn-danger" onclick="deleteTransactionFromCharity(${t.id})" style="padding:6px 12px;"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function deleteTransactionFromCharity(id) {
+            if (confirm('هل أنت متأكد من حذف هذه العملية الخيرية؟')) {
+                DB.deleteTransaction(id);
+                loadCharity();
+                updateDashboard();
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
+                showToast('🗑️ تم حذف العملية الخيرية', 'warning');
+            }
+        }
+
+        // ============================================================
+        // 13. العمليات
         // ============================================================
         function updateCategorySelects() {
             const cats = DB.getCategories();
-            ['txCategory', 'filterCategory', 'budgetCategory', 'reportCategory'].forEach(id => {
+            ['txCategory', 'filterCategory', 'budgetCategory', 'reportCategory', 'charityCategory'].forEach(id => {
                 const el = document.getElementById(id);
                 if (!el) return;
                 const val = el.value;
@@ -2543,15 +2226,17 @@
 
         function updateAccountSelects() {
             const accs = DB.getAccounts();
-            const el = document.getElementById('txAccount');
-            if (!el) return;
-            const val = el.value;
-            el.innerHTML = '';
-            accs.forEach(a => { const o = document.createElement('option');
-                o.value = a;
-                o.textContent = a;
-                el.appendChild(o); });
-            if (val && accs.includes(val)) el.value = val;
+            ['txAccount', 'charityAccount'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const val = el.value;
+                el.innerHTML = '';
+                accs.forEach(a => { const o = document.createElement('option');
+                    o.value = a;
+                    o.textContent = a;
+                    el.appendChild(o); });
+                if (val && accs.includes(val)) el.value = val;
+            });
         }
 
         function updateIncomeSourceSelects() {
@@ -2582,17 +2267,18 @@
             const tbody = document.getElementById('transactionsTableBody');
             if (filtered.length === 0) {
                 tbody.innerHTML =
-                    `<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text-light)"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:10px"></i>لا توجد عمليات</td></tr>`;
+                    `<tr><td colspan="10" style="text-align:center;padding:30px;color:var(--text-light)"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:10px"></i>لا توجد عمليات</td></tr>`;
                 return;
             }
             tbody.innerHTML = filtered.map(t => `
                 <tr>
                     <td>${getDateString(t.date)}</td>
-                    <td><span class="filter-badge ${t.type}">${getTypeLabel(t.type)}</span></td>
+                    <td><span class="${getTypeBadge(t.type)}">${getTypeLabel(t.type)}</span></td>
                     <td class="${getTypeClass(t.type)}">${formatCurrency(t.amount)}</td>
                     <td>${t.category}</td>
                     <td>${t.incomeSource || '-'}</td>
-                    <td>${t.portal || '-'}</td>
+                    <td>${t.charityType || '-'}</td>
+                    <td>${t.recipient || '-'}</td>
                     <td>${t.account || 'نقدي'}</td>
                     <td>${t.notes || ''}</td>
                     <td class="transaction-actions">
@@ -2630,50 +2316,273 @@
         }
 
         // ============================================================
-        // 18. الميزانيات
+        // 14. التقارير المتقدمة
         // ============================================================
-        function loadBudgets() {
-            const budgets = DB.get('budgets');
+        function generateAdvancedReport() {
+            const period = document.getElementById('reportPeriod').value;
+            const year = parseInt(document.getElementById('reportYear').value);
+            const periodSelect = parseInt(document.getElementById('reportPeriodSelect').value);
+            const category = document.getElementById('reportCategory').value;
+            const typeFilter = document.getElementById('reportTypeFilter').value;
+
+            let startDate, endDate;
+            switch (period) {
+                case 'month':
+                    startDate = new Date(year, periodSelect - 1, 1);
+                    endDate = new Date(year, periodSelect, 0);
+                    break;
+                case 'quarter':
+                    const quarterStart = (periodSelect - 1) * 3;
+                    startDate = new Date(year, quarterStart, 1);
+                    endDate = new Date(year, quarterStart + 3, 0);
+                    break;
+                case 'half':
+                    const halfStart = (periodSelect - 1) * 6;
+                    startDate = new Date(year, halfStart, 1);
+                    endDate = new Date(year, halfStart + 6, 0);
+                    break;
+                case 'year':
+                    startDate = new Date(year, 0, 1);
+                    endDate = new Date(year, 11, 31);
+                    break;
+                case 'custom':
+                    startDate = new Date(document.getElementById('reportStartDate').value);
+                    endDate = new Date(document.getElementById('reportEndDate').value);
+                    break;
+                default:
+                    startDate = new Date(year, periodSelect - 1, 1);
+                    endDate = new Date(year, periodSelect, 0);
+            }
+
             const transactions = DB.get('transactions');
-            const now = new Date();
-            const month = now.getMonth(),
-                year = now.getFullYear();
-            const monthlyExpenses = transactions.filter(t => {
+            let filtered = transactions.filter(t => {
                 const d = new Date(t.date);
-                return t.type === 'expense' && d.getMonth() === month && d.getFullYear() === year;
+                if (d < startDate || d > endDate) return false;
+                if (category !== 'all' && t.category !== category) return false;
+                if (typeFilter !== 'all' && t.type !== typeFilter) return false;
+                return true;
             });
-            const c = document.getElementById('budgetsList');
-            if (budgets.length === 0) {
-                c.innerHTML =
-                    `<div class="empty-state"><i class="fas fa-bullseye"></i>لا توجد ميزانيات مسجلة<br><small>أضف ميزانية لبدء التتبع</small></div>`;
-                return;
-            }
-            c.innerHTML = budgets.map(b => {
-                const spent = monthlyExpenses.filter(t => t.category === b.category).reduce((s, t) => s + t.amount, 0);
-                const p = Math.min((spent / b.limit) * 100, 100);
-                const cls = p >= 90 ? 'danger' : p >= 70 ? 'warning' : 'success';
-                return `<div class="budget-card">
-                    <div class="info">
-                        <h4>${b.category}</h4>
-                        <p>${formatCurrency(spent)} من ${formatCurrency(b.limit)} (${p.toFixed(0)}%) - المتبقي: ${formatCurrency(Math.max(b.limit - spent, 0))}</p>
-                        <div class="progress-bar"><div class="progress-fill ${cls}" style="width:${p}%"></div></div>
-                    </div>
-                    <button class="btn-danger" onclick="deleteBudget(${b.id})" style="padding:6px 12px"><i class="fas fa-trash"></i></button>
-                </div>`;
-            }).join('');
-        }
 
-        function deleteBudget(id) {
-            if (confirm('هل أنت متأكد من حذف هذه الميزانية؟')) {
-                DB.deleteBudget(id);
-                loadBudgets();
-                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
-                showToast('🗑️ تم حذف الميزانية', 'warning');
+            const income = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            const expense = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            const charity = filtered.filter(t => t.type === 'charity').reduce((s, t) => s + t.amount, 0);
+            const profit = income - expense - charity;
+            const savings = DB.get('savings').reduce((s, item) => s + item.current, 0);
+            const savingsRate = income > 0 ? ((income - expense - charity) / income * 100) : 0;
+
+            document.getElementById('reportIncome').textContent = formatCurrency(income);
+            document.getElementById('reportExpense').textContent = formatCurrency(expense);
+            document.getElementById('reportProfit').textContent = formatCurrency(profit);
+            document.getElementById('reportCharity').textContent = formatCurrency(charity);
+            document.getElementById('reportCharity').style.color = '#fbbf24';
+            document.getElementById('reportSavingsRate').textContent = savingsRate.toFixed(1) + '%';
+
+            let html = `
+                <div class="report-summary">
+                    <div class="report-stat"><h4>إجمالي الدخل</h4><p style="color:#22c55e">${formatCurrency(income)}</p></div>
+                    <div class="report-stat"><h4>إجمالي المصروفات</h4><p style="color:#ef4444">${formatCurrency(expense)}</p></div>
+                    <div class="report-stat"><h4>صافي الربح</h4><p style="color:${profit>=0?'#22c55e':'#ef4444'}">${formatCurrency(profit)}</p></div>
+                    <div class="report-stat"><h4>تجارة مع الله</h4><p style="color:#fbbf24">${formatCurrency(charity)}</p></div>
+                    <div class="report-stat"><h4>نسبة الادخار</h4><p style="color:${savingsRate >= 20 ? '#22c55e' : '#ef4444'}">${savingsRate.toFixed(1)}%</p></div>
+                </div>
+            `;
+
+            const summary = filtered.filter(t => t.type === 'expense' || t.type === 'charity').reduce((acc, t) => {
+                acc[t.category] = (acc[t.category] || 0) + t.amount;
+                return acc;
+            }, {});
+
+            html += `<div style="margin-top:20px"><h4>📊 توزيع المصروفات والتبرعات</h4><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px">`;
+            if (Object.keys(summary).length === 0) html += '<p style="color:var(--text-light)">لا توجد بيانات</p>';
+            else html += Object.entries(summary).sort((a, b) => b[1] - a[1]).map(([cat, amt]) =>
+                `<div style="background:var(--bg);padding:10px;border-radius:8px;text-align:center"><strong>${cat}</strong><p style="color:var(--text-light)">${formatCurrency(amt)}</p></div>`
+            ).join('');
+            html += `</div></div>`;
+
+            if (filtered.length > 0) {
+                html += `<div style="margin-top:20px"><h4>📋 العمليات</h4><div class="table-responsive"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>التصنيف</th><th>الحساب</th></tr></thead><tbody>`;
+                html += filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 100).map(t =>
+                    `<tr><td>${getDateString(t.date)}</td><td><span class="${getTypeBadge(t.type)}">${getTypeLabel(t.type)}</span></td><td class="${getTypeClass(t.type)}">${formatCurrency(t.amount)}</td><td>${t.category}</td><td>${t.account||'نقدي'}</td></tr>`
+                ).join('');
+                html += `</tbody></table></div></div>`;
             }
+
+            document.getElementById('reportContent').innerHTML = html;
+            window._reportData = { income, expense, charity, profit, savingsRate, transactions: filtered };
         }
 
         // ============================================================
-        // 19. الادخار
+        // 15. مقارنة
+        // ============================================================
+        function generateComparison() {
+            const period1 = parseInt(document.getElementById('comparePeriod1').value);
+            const period2 = parseInt(document.getElementById('comparePeriod2').value);
+            const now = new Date();
+            const endDate1 = new Date(now);
+            const startDate1 = new Date(now);
+            startDate1.setMonth(startDate1.getMonth() - period1);
+            const endDate2 = new Date(startDate1);
+            const startDate2 = new Date(startDate1);
+            startDate2.setMonth(startDate2.getMonth() - period2);
+            const transactions = DB.get('transactions');
+
+            const getPeriodData = (start, end) => {
+                const filtered = transactions.filter(t => {
+                    const d = new Date(t.date);
+                    return d >= start && d <= end;
+                });
+                const income = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+                const expense = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+                const charity = filtered.filter(t => t.type === 'charity').reduce((s, t) => s + t.amount, 0);
+                return { income, expense, charity, profit: income - expense - charity, count: filtered.length };
+            };
+
+            const data1 = getPeriodData(startDate1, endDate1);
+            const data2 = getPeriodData(startDate2, endDate2);
+
+            const incomeChange = data2.income > 0 ? ((data1.income - data2.income) / data2.income * 100) : 0;
+            const expenseChange = data2.expense > 0 ? ((data1.expense - data2.expense) / data2.expense * 100) : 0;
+            const charityChange = data2.charity > 0 ? ((data1.charity - data2.charity) / data2.charity * 100) : 0;
+            const profitChange = data2.profit > 0 ? ((data1.profit - data2.profit) / data2.profit * 100) : 0;
+
+            const container = document.getElementById('comparisonResult');
+            container.innerHTML = `
+                <div style="margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;">
+                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
+                        <h4>📈 التغير في الدخل</h4>
+                        <p style="font-size:24px;color:${incomeChange >= 0 ? 'var(--success)' : 'var(--danger)'}">${incomeChange >= 0 ? '+' : ''}${incomeChange.toFixed(1)}%</p>
+                        <p style="font-size:13px;color:var(--text-light);">${formatCurrency(data2.income)} → ${formatCurrency(data1.income)}</p>
+                    </div>
+                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
+                        <h4>📉 التغير في المصروفات</h4>
+                        <p style="font-size:24px;color:${expenseChange <= 0 ? 'var(--success)' : 'var(--danger)'}">${expenseChange >= 0 ? '+' : ''}${expenseChange.toFixed(1)}%</p>
+                        <p style="font-size:13px;color:var(--text-light);">${formatCurrency(data2.expense)} → ${formatCurrency(data1.expense)}</p>
+                    </div>
+                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
+                        <h4>🤲 التغير في التبرعات</h4>
+                        <p style="font-size:24px;color:${charityChange >= 0 ? 'var(--gold)' : 'var(--warning)'}">${charityChange >= 0 ? '+' : ''}${charityChange.toFixed(1)}%</p>
+                        <p style="font-size:13px;color:var(--text-light);">${formatCurrency(data2.charity)} → ${formatCurrency(data1.charity)}</p>
+                    </div>
+                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
+                        <h4>💹 التغير في صافي الربح</h4>
+                        <p style="font-size:24px;color:${profitChange >= 0 ? 'var(--success)' : 'var(--danger)'}">${profitChange >= 0 ? '+' : ''}${profitChange.toFixed(1)}%</p>
+                        <p style="font-size:13px;color:var(--text-light);">${formatCurrency(data2.profit)} → ${formatCurrency(data1.profit)}</p>
+                    </div>
+                    <div style="background:var(--bg);padding:15px;border-radius:var(--radius);text-align:center;">
+                        <h4>📊 عدد العمليات</h4>
+                        <p style="font-size:24px;">${data2.count} → ${data1.count}</p>
+                        <p style="font-size:13px;color:var(--text-light);">${((data1.count - data2.count) / (data2.count || 1) * 100).toFixed(1)}% تغير</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // 16. تصدير التقارير
+        // ============================================================
+        function exportReportPDF() {
+            const el = document.getElementById('reportContent');
+            if (!el || el.innerHTML.trim() === '') { showToast('الرجاء إنشاء تقرير أولاً', 'warning'); return; }
+            const title = document.createElement('div');
+            title.style.cssText = 'text-align:center;padding:20px;border-bottom:2px solid #2563eb;margin-bottom:20px;';
+            title.innerHTML = `
+                <h1 style="color:#2563eb;font-size:28px;">💰 فلوسي - تقرير مالي شامل</h1>
+                <p style="color:#64748b;">${new Date().toLocaleDateString('ar-EG')}</p>
+                <p style="color:#64748b;">${AUTH.currentUser?.username || 'مدير النظام'}</p>
+                <p style="color:#64748b;font-size:14px;">🤲 يشمل الدخل - المصروفات - تجارة مع الله</p>
+            `;
+            const footer = document.createElement('div');
+            footer.style.cssText =
+                'text-align:center;padding:20px;border-top:2px solid #e2e8f0;margin-top:20px;color:#94a3b8;font-size:12px;';
+            footer.textContent = 'تم إنشاء التقرير بواسطة فلوسي - النظام المالي المنزلي المتكامل v6.5';
+            const container = document.createElement('div');
+            container.style.cssText = 'padding:20px;background:white;';
+            container.appendChild(title);
+            container.appendChild(el.cloneNode(true));
+            container.appendChild(footer);
+            html2pdf().set({
+                margin: 10,
+                filename: `flosy_report_${new Date().toISOString().split('T')[0]}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).from(container).save();
+            showToast('📄 تم تصدير التقرير كـ PDF', 'success');
+        }
+
+        function exportReportExcel() {
+            if (!window._reportData) { showToast('الرجاء إنشاء تقرير أولاً', 'warning'); return; }
+            const data = window._reportData.transactions.map(t => ({
+                'التاريخ': getDateString(t.date),
+                'النوع': getTypeLabel(t.type),
+                'المبلغ': t.amount,
+                'التصنيف': t.category,
+                'مصدر الدخل': t.incomeSource || '-',
+                'نوع الخيري': t.charityType || '-',
+                'المستفيد': t.recipient || '-',
+                'الحساب': t.account || 'نقدي',
+                'الملاحظات': t.notes || ''
+            }));
+            if (data.length === 0) { showToast('لا توجد بيانات لتصديرها', 'warning'); return; }
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'التقرير');
+            XLSX.writeFile(wb, `flosy_report_${new Date().toISOString().split('T')[0]}.xlsx`);
+            showToast('📊 تم تصدير التقرير كـ Excel', 'success');
+        }
+
+        function exportReportPPT() {
+            if (!window._reportData) { showToast('الرجاء إنشاء تقرير أولاً', 'warning'); return; }
+            const data = window._reportData;
+            let html = `
+                <html><head><meta charset="UTF-8"><title>تقرير فلوسي</title>
+                <style>
+                    body { font-family: 'Tajawal', Arial, sans-serif; direction: rtl; padding: 20px; }
+                    h1 { color: #2563eb; text-align: center; }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+                    th { background: #f1f5f9; }
+                    .summary { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin: 20px 0; }
+                    .summary-item { background: #f1f5f9; padding: 15px; border-radius: 8px; text-align: center; }
+                    .charity-color { color: #fbbf24; }
+                </style>
+                </head>
+                <body>
+                <h1>💰 تقرير فلوسي المالي</h1>
+                <p style="text-align:center;">تاريخ التقرير: ${new Date().toLocaleDateString('ar-EG')}</p>
+                <div class="summary">
+                    <div class="summary-item"><h3>الدخل</h3><p style="color:#22c55e;font-size:24px;">${formatCurrency(data.income)}</p></div>
+                    <div class="summary-item"><h3>المصروفات</h3><p style="color:#ef4444;font-size:24px;">${formatCurrency(data.expense)}</p></div>
+                    <div class="summary-item"><h3>تجارة مع الله</h3><p style="color:#fbbf24;font-size:24px;">${formatCurrency(data.charity)}</p></div>
+                    <div class="summary-item"><h3>صافي الربح</h3><p style="color:${data.profit >= 0 ? '#22c55e' : '#ef4444'};font-size:24px;">${formatCurrency(data.profit)}</p></div>
+                    <div class="summary-item"><h3>عدد العمليات</h3><p style="font-size:24px;">${data.transactions.length}</p></div>
+                </div>
+                <h3>📊 توزيع المصروفات والتبرعات</h3>
+                <table><thead><tr><th>التصنيف</th><th>المبلغ</th></tr></thead><tbody>
+                ${Object.entries(data.transactions.filter(t => t.type === 'expense' || t.type === 'charity').reduce((acc, t) => { acc[t.category] = (acc[t.category] || 0) + t.amount; return acc; }, {})).sort((a,b) => b[1]-a[1]).map(([c, amt]) => `
+                    <tr><td>${c}</td><td>${formatCurrency(amt)}</td></tr>
+                `).join('')}
+                </tbody></table>
+                <h3>📋 تفاصيل العمليات</h3>
+                <table><thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>التصنيف</th></tr></thead><tbody>
+                ${data.transactions.slice(0, 50).map(t => `
+                    <tr><td>${getDateString(t.date)}</td><td>${getTypeLabel(t.type)}</td><td>${formatCurrency(t.amount)}</td><td>${t.category}</td></tr>
+                `).join('')}
+                </tbody></table>
+                <p style="text-align:center;margin-top:20px;color:#94a3b8;font-size:12px;">تم إنشاء التقرير بواسطة فلوسي v6.5</p>
+                </body></html>
+            `;
+            const blob = new Blob([html], { type: 'application/vnd.ms-powerpoint' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `flosy_report_${new Date().toISOString().split('T')[0]}.ppt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📊 تم تصدير التقرير كـ PowerPoint', 'success');
+        }
+
+        // ============================================================
+        // 17. باقي الدوال (مختصرة)
         // ============================================================
         function loadSavings() {
             const savings = DB.get('savings');
@@ -2727,9 +2636,6 @@
             }
         }
 
-        // ============================================================
-        // 20. فيزا المشتريات
-        // ============================================================
         function loadVisa() {
             const visa = DB.get('visa');
             const c = document.getElementById('visaList');
@@ -2764,9 +2670,6 @@
             }
         }
 
-        // ============================================================
-        // 21. الجمعيات
-        // ============================================================
         function loadAssociations() {
             const associations = DB.get('associations');
             const c = document.getElementById('associationsList');
@@ -2803,9 +2706,6 @@
             }
         }
 
-        // ============================================================
-        // 22. باقي الدوال (مختصرة)
-        // ============================================================
         function loadObligations() {
             const obligations = DB.get('obligations');
             const now = new Date();
@@ -3010,7 +2910,7 @@
         }
 
         // ============================================================
-        // 23. البوابات
+        // 18. البوابات
         // ============================================================
         const PORTALS = {
             categories: ['حكومة', 'خاص', 'عمل حر', 'استثمار', 'تسويق', 'أخرى'],
@@ -3119,7 +3019,7 @@
         }
 
         // ============================================================
-        // 24. المستخدمين والإعدادات
+        // 19. المستخدمين والإعدادات (مختصرة)
         // ============================================================
         function loadUsersList() {
             const container = document.getElementById('usersList');
@@ -3145,18 +3045,9 @@
                             ${u.id === AUTH.currentUser.id ? ' <span class="badge badge-warning">(أنت)</span>' : ''}
                             <br>
                             <small>نقاط: ${u.points || 0} | الإنجازات: ${(u.achievements || []).length}</small>
-                            <br>
-                            <small>آخر نشاط: ${u.lastActive ? new Date(u.lastActive).toLocaleString('ar-EG') : 'غير معروف'}</small>
                         </p>
-                        ${(u.achievements || []).length > 0 ? `
-                            <div style="margin-top:5px;">
-                                ${ACHIEVEMENTS.list.filter(a => u.achievements.includes(a.id)).map(a => `
-                                    <span class="achievement-badge unlocked"><i class="fas ${a.icon}"></i> ${a.name}</span>
-                                `).join('')}
-                            </div>
-                        ` : ''}
                     </div>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <div style="display:flex;gap:8px;">
                         ${u.id !== AUTH.currentUser.id ? `
                             <button class="btn-secondary" onclick="editUserRole(${u.id})" style="padding:6px 12px;"><i class="fas fa-edit"></i></button>
                             <button class="btn-danger" onclick="deleteUser(${u.id})" style="padding:6px 12px;"><i class="fas fa-trash"></i></button>
@@ -3196,7 +3087,7 @@
         }
 
         // ============================================================
-        // 25. الإعدادات - واجهة المستخدم
+        // 20. الإعدادات
         // ============================================================
         function loadSettingsUI() {
             const settingsGrid = document.getElementById('settingsGrid');
@@ -3204,7 +3095,6 @@
             const settings = DB.getSettings();
 
             settingsGrid.innerHTML = `
-                <!-- الملف الشخصي -->
                 <div class="settings-card">
                     <h3><i class="fas fa-user"></i> الملف الشخصي</h3>
                     <div class="setting-item">
@@ -3232,7 +3122,7 @@
                             <option value="ما هو اسم والدتك؟" ${settings.securityQuestion == 'ما هو اسم والدتك؟' ? 'selected' : ''}>ما هو اسم والدتك؟</option>
                             <option value="ما هو اسم مدرستك الأولى؟" ${settings.securityQuestion == 'ما هو اسم مدرستك الأولى؟' ? 'selected' : ''}>ما هو اسم مدرستك الأولى؟</option>
                             <option value="ما هو اسم حيوانك الأليف؟" ${settings.securityQuestion == 'ما هو اسم حيوانك الأليف؟' ? 'selected' : ''}>ما هو اسم حيوانك الأليف؟</option>
-                            <option value="ما هو اسم مدينتك المفضلة؟" ${settings.securityQuestion == 'ما هو اسم مدينتك المفضلة؟' ? 'selected' : ''}>ما هو اسم مدينتك المفضلة؟</option>
+                            <option value="ما هو اسم مدينتك المفضلة؟" ${settings.securityQuestion == 'ما هو اسم مدينتك المفضلة？' ? 'selected' : ''}>ما هو اسم مدينتك المفضلة؟</option>
                         </select>
                     </div>
                     <div class="setting-item">
@@ -3242,7 +3132,6 @@
                     </div>
                 </div>
 
-                <!-- العملات -->
                 <div class="settings-card">
                     <h3><i class="fas fa-money-bill"></i> العملات</h3>
                     <div class="setting-item">
@@ -3257,7 +3146,6 @@
                     </div>
                 </div>
 
-                <!-- الإشعارات -->
                 <div class="settings-card">
                     <h3><i class="fas fa-bell"></i> الإشعارات</h3>
                     <div class="setting-item">
@@ -3283,7 +3171,6 @@
                     </div>
                 </div>
 
-                <!-- المظهر -->
                 <div class="settings-card">
                     <h3><i class="fas fa-palette"></i> المظهر</h3>
                     <div class="setting-item">
@@ -3303,6 +3190,7 @@
                             <button class="color-btn ${settings.primaryColor == '#8b5cf6' ? 'active' : ''}" data-color="#8b5cf6" style="background:#8b5cf6" onclick="changePrimaryColor('#8b5cf6')"></button>
                             <button class="color-btn ${settings.primaryColor == '#ec4899' ? 'active' : ''}" data-color="#ec4899" style="background:#ec4899" onclick="changePrimaryColor('#ec4899')"></button>
                             <button class="color-btn ${settings.primaryColor == '#f59e0b' ? 'active' : ''}" data-color="#f59e0b" style="background:#f59e0b" onclick="changePrimaryColor('#f59e0b')"></button>
+                            <button class="color-btn ${settings.primaryColor == '#fbbf24' ? 'active' : ''}" data-color="#fbbf24" style="background:#fbbf24" onclick="changePrimaryColor('#fbbf24')"></button>
                         </div>
                     </div>
                     <div class="setting-item">
@@ -3315,7 +3203,6 @@
                     </div>
                 </div>
 
-                <!-- التصنيفات -->
                 <div class="settings-card">
                     <h3><i class="fas fa-tags"></i> التصنيفات</h3>
                     <div id="categoriesList"></div>
@@ -3325,7 +3212,6 @@
                     </div>
                 </div>
 
-                <!-- الحسابات -->
                 <div class="settings-card">
                     <h3><i class="fas fa-wallet"></i> الحسابات</h3>
                     <div id="accountsList"></div>
@@ -3335,7 +3221,6 @@
                     </div>
                 </div>
 
-                <!-- مصادر الدخل -->
                 <div class="settings-card">
                     <h3><i class="fas fa-briefcase"></i> مصادر الدخل</h3>
                     <div id="incomeSourcesList"></div>
@@ -3345,14 +3230,12 @@
                     </div>
                 </div>
 
-                <!-- سجل النشاطات -->
                 <div class="settings-card">
                     <h3><i class="fas fa-history"></i> سجل النشاطات</h3>
                     <div id="activityLog" class="activity-log"></div>
                     <button onclick="clearActivityLog()" class="btn-danger" style="margin-top:10px;"><i class="fas fa-trash"></i> مسح السجل</button>
                 </div>
 
-                <!-- البيانات -->
                 <div class="settings-card">
                     <h3><i class="fas fa-database"></i> البيانات</h3>
                     <button onclick="backupData()" class="btn-secondary"><i class="fas fa-download"></i> نسخ احتياطي</button>
@@ -3361,7 +3244,6 @@
                     <button onclick="clearAllData()" class="btn-danger" style="margin-top:10px"><i class="fas fa-trash"></i> حذف كل البيانات</button>
                 </div>
 
-                <!-- المزامنة السحابية -->
                 <div class="settings-card" id="syncCard">
                     <h3><i class="fas fa-cloud"></i> المزامنة السحابية</h3>
                     <button onclick="syncNow()" class="btn-primary" style="width:100%;justify-content:center;margin:5px 0;">
@@ -3384,7 +3266,6 @@
             loadIncomeSources();
             loadActivityLog();
 
-            // Dark Mode
             document.getElementById('settingsDarkMode').addEventListener('change', function() {
                 document.body.classList.toggle('dark-mode', this.checked);
                 const s = DB.getSettings();
@@ -3394,18 +3275,18 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Auto Backup
             document.getElementById('settingsAutoBackup').addEventListener('change', function() {
                 const s = DB.getSettings();
                 s.autoBackup = this.checked;
                 DB.saveSettings(s);
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
-                showToast(this.checked ? '✅ تم تفعيل النسخ الاحتياطي التلقائي' : '⏹️ تم إيقاف النسخ الاحتياطي التلقائي', 'info');
+                showToast(this.checked ? '✅ تم تفعيل النسخ الاحتياطي التلقائي' : '⏹️ تم إيقاف النسخ الاحتياطي التلقائي',
+                    'info');
             });
         }
 
         // ============================================================
-        // 26. دوال الإعدادات
+        // 21. دوال الإعدادات (مختصرة)
         // ============================================================
         function changePrimaryColor(color) {
             document.documentElement.style.setProperty('--secondary', color);
@@ -3538,7 +3419,7 @@
         }
 
         function deleteAccount(acc) {
-            if (confirm(`هل أنت متأكد من حذف الحساب "${acc}"؟`)) {
+            if (confirm(`هل أنت متأكد من حذف الحساب "${acc}"？`)) {
                 DB.deleteAccount(acc);
                 loadAccounts();
                 updateAccountSelects();
@@ -3568,7 +3449,7 @@
         }
 
         function deleteIncomeSource(source) {
-            if (confirm(`هل أنت متأكد من حذف مصدر الدخل "${source}"؟`)) {
+            if (confirm(`هل أنت متأكد من حذف مصدر الدخل "${source}"？`)) {
                 DB.deleteIncomeSource(source);
                 loadIncomeSources();
                 updateIncomeSourceSelects();
@@ -3603,7 +3484,7 @@
         }
 
         // ============================================================
-        // 27. البيانات والمزامنة
+        // 22. البيانات والمزامنة
         // ============================================================
         function backupData() {
             const data = DB.backup();
@@ -3649,7 +3530,6 @@
         const SYNC = {
             isSyncing: false,
             lastSync: null,
-
             async saveToFirebase() {
                 try {
                     this.isSyncing = true;
@@ -3684,7 +3564,6 @@
                     return { success: false, error: error.message };
                 } finally { this.isSyncing = false; }
             },
-
             async loadFromFirebase() {
                 try {
                     if (!AUTH.currentUser) return { success: false, error: 'لا يوجد مستخدم' };
@@ -3767,63 +3646,45 @@
         }
 
         // ============================================================
-        // 28. لوحة المطور
+        // 23. لوحة المطور
         // ============================================================
         function updateDeveloperDashboard() {
-            // Firebase Status
-            document.getElementById('devFirebaseStatus').textContent = db ? '✅ متصل' : '❌ غير متصل';
-            document.getElementById('devFirebaseStatus').style.color = db ? 'var(--success)' : 'var(--danger)';
+            const devStats = document.getElementById('devStats');
+            if (!devStats) return;
+            const storageUsed = Object.keys(localStorage).filter(k => k.startsWith('flosy_')).reduce((s, k) => s + localStorage[
+                k].length, 0);
+            devStats.innerHTML = `
+                <div class="dev-stat-card">
+                    <div class="value ${db ? 'status-online' : 'status-offline'}">${db ? '✅' : '❌'}</div>
+                    <div class="label">حالة Firebase</div>
+                </div>
+                <div class="dev-stat-card">
+                    <div class="value status-online">✅</div>
+                    <div class="label">حالة API</div>
+                </div>
+                <div class="dev-stat-card">
+                    <div class="value status-online">✅</div>
+                    <div class="label">حالة السيرفر</div>
+                </div>
+                <div class="dev-stat-card">
+                    <div class="value">${(performance.now()).toFixed(0)}ms</div>
+                    <div class="label">سرعة التحميل</div>
+                </div>
+                <div class="dev-stat-card">
+                    <div class="value">${(storageUsed / 1024).toFixed(1)} KB</div>
+                    <div class="label">المساحة المستخدمة</div>
+                </div>
+                <div class="dev-stat-card">
+                    <div class="value">${DB.get('transactions').length}</div>
+                    <div class="label">عدد العمليات</div>
+                </div>
+            `;
 
-            // API Status
-            document.getElementById('devApiStatus').textContent = '✅ شغال';
-            document.getElementById('devApiStatus').style.color = 'var(--success)';
-
-            // Server Status
-            document.getElementById('devServerStatus').textContent = '✅ شغال';
-            document.getElementById('devServerStatus').style.color = 'var(--success)';
-
-            // Load Time
-            const loadTime = performance.now();
-            document.getElementById('devLoadTime').textContent = loadTime.toFixed(0) + 'ms';
-
-            // Storage Used
-            let totalSize = 0;
-            for (let key in localStorage) {
-                if (key.startsWith('flosy_')) {
-                    totalSize += localStorage[key].length;
-                }
-            }
-            document.getElementById('devStorageUsed').textContent = (totalSize / 1024).toFixed(1) + ' KB';
-
-            // Transaction Count
-            document.getElementById('devTransactionCount').textContent = DB.get('transactions').length;
-
-            // Storage Status
-            const storageStatus = document.getElementById('storageStatus');
-            if (storageStatus) {
-                const keys = Object.keys(DB.keys);
-                let html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">';
-                keys.forEach(k => {
-                    const data = DB.get(k);
-                    html += `
-                        <div style="background:var(--bg);padding:10px;border-radius:8px;text-align:center;">
-                            <strong>${k}</strong>
-                            <p style="color:var(--text-light);font-size:14px;">${data.length} عنصر</p>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                storageStatus.innerHTML = html;
-            }
-
-            // Error Log
             const errorLogContainer = document.getElementById('errorLog');
             if (errorLogContainer) {
                 const savedErrors = localStorage.getItem('flosy_error_log');
                 if (savedErrors) {
-                    try {
-                        errorLog = JSON.parse(savedErrors);
-                    } catch (e) { errorLog = []; }
+                    try { errorLog = JSON.parse(savedErrors); } catch (e) { errorLog = []; }
                 }
                 if (errorLog.length === 0) {
                     errorLogContainer.innerHTML = '<div style="color:var(--text-light);">لا توجد أخطاء مسجلة</div>';
@@ -3849,7 +3710,34 @@
         }
 
         // ============================================================
-        // 29. تحميل جميع البيانات
+        // 24. النسخ الاحتياطي الشهري
+        // ============================================================
+        function checkMonthlyBackup() {
+            const settings = DB.getSettings();
+            if (!settings.autoBackup) return;
+            const lastBackup = localStorage.getItem('flosy_last_backup');
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            if (lastBackup) {
+                const last = new Date(lastBackup);
+                if (last.getMonth() === currentMonth && last.getFullYear() === currentYear) return;
+            }
+            const data = DB.backup();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `flosy_backup_${currentYear}-${String(currentMonth + 1).padStart(2, '0')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            localStorage.setItem('flosy_last_backup', now.toISOString());
+            showToast('📦 تم إنشاء نسخة احتياطية شهرية تلقائية', 'success');
+            DB.logActivity('نسخ احتياطي تلقائي', `شهر ${currentMonth + 1}/${currentYear}`);
+        }
+
+        // ============================================================
+        // 25. تحميل جميع البيانات
         // ============================================================
         function loadAllData() {
             updateDashboard();
@@ -3858,6 +3746,7 @@
             loadSavings();
             loadVisa();
             loadAssociations();
+            loadCharity();
             loadObligations();
             loadFamily();
             loadDebts();
@@ -3868,7 +3757,6 @@
             loadSettingsUI();
             updateDeveloperDashboard();
 
-            // Report period select
             const periodSelect = document.getElementById('reportPeriod');
             if (periodSelect) {
                 periodSelect.addEventListener('change', function() {
@@ -3878,7 +3766,6 @@
                 });
             }
 
-            // Report year
             const cy = new Date().getFullYear();
             ['reportYear', 'statsYear'].forEach(id => {
                 const el = document.getElementById(id);
@@ -3895,9 +3782,6 @@
             });
         }
 
-        // ============================================================
-        // 30. تحديث الواجهة
-        // ============================================================
         function updateUIForUser() {
             const user = AUTH.currentUser;
             const levelBadge = user.level ? ` <span class="badge badge-gold">مستوى ${user.level}</span>` : '';
@@ -3906,9 +3790,6 @@
             document.getElementById('userCount').textContent = AUTH.users.length + ' مستخدم';
         }
 
-        // ============================================================
-        // 31. رفع الصورة
-        // ============================================================
         function uploadAvatar(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -3924,18 +3805,7 @@
         }
 
         // ============================================================
-        // 32. تغيير كلمة المرور
-        // ============================================================
-        function showChangePassword() {
-            document.getElementById('changePasswordScreen').style.display = 'flex';
-            document.getElementById('oldPassword').value = '';
-            document.getElementById('newPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
-            document.getElementById('changePasswordError').textContent = '';
-        }
-
-        // ============================================================
-        // 33. تهيئة التطبيق
+        // 26. تهيئة التطبيق
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             const hasSession = AUTH.init();
@@ -3954,7 +3824,6 @@
                 }, 500);
             }
 
-            // Dark Mode
             const settings = DB.getSettings();
             if (settings.darkMode) {
                 document.body.classList.add('dark-mode');
@@ -3976,12 +3845,10 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Menu Toggle
             document.getElementById('menuToggle').addEventListener('click', function() {
                 document.getElementById('sidebar').classList.toggle('open');
             });
 
-            // Navigation
             document.querySelectorAll('.sidebar-menu a').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -4004,6 +3871,7 @@
                     else if (pageId === 'savings') loadSavings();
                     else if (pageId === 'visa') loadVisa();
                     else if (pageId === 'associations') loadAssociations();
+                    else if (pageId === 'charity') loadCharity();
                     else if (pageId === 'obligations') loadObligations();
                     else if (pageId === 'family') loadFamily();
                     else if (pageId === 'debts') loadDebts();
@@ -4017,18 +3885,22 @@
                 });
             });
 
-            // ===== النماذج =====
             document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('charityDate').value = new Date().toISOString().split('T')[0];
             updateCategorySelects();
             updateAccountSelects();
             updateIncomeSourceSelects();
 
+            // إظهار/إخفاء حقول الخيرية
             document.getElementById('txType').addEventListener('change', function() {
+                const isCharity = this.value === 'charity';
                 document.getElementById('incomeSourceGroup').style.display = this.value === 'income' ? 'block' :
-                    'none';
+                'none';
+                document.getElementById('charityTypeGroup').style.display = isCharity ? 'block' : 'none';
+                document.getElementById('charityRecipientGroup').style.display = isCharity ? 'block' : 'none';
             });
 
-            // Transaction Form
+            // ===== نماذج الإضافة =====
             document.getElementById('transactionForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const type = document.getElementById('txType').value;
@@ -4039,6 +3911,8 @@
                 const notes = document.getElementById('txNotes').value;
                 const incomeSource = document.getElementById('txIncomeSource').value;
                 const portal = document.getElementById('txPortal').value;
+                const charityType = document.getElementById('txCharityType').value;
+                const recipient = document.getElementById('txCharityRecipient').value.trim();
 
                 if (!amount || amount <= 0) { showToast('الرجاء إدخال مبلغ صحيح', 'warning'); return; }
                 if (!date) { showToast('الرجاء تحديد التاريخ', 'warning'); return; }
@@ -4046,11 +3920,13 @@
                 const transaction = {
                     type,
                     amount,
-                    category,
+                    category: type === 'charity' ? 'تجارة مع الله' : category,
                     date,
                     account,
                     incomeSource: type === 'income' ? incomeSource : '',
                     portal: type === 'income' ? portal : '',
+                    charityType: type === 'charity' ? charityType : '',
+                    recipient: type === 'charity' ? recipient : '',
                     notes: notes || ''
                 };
 
@@ -4064,24 +3940,60 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Budget Form
             document.getElementById('budgetForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const category = document.getElementById('budgetCategory').value;
                 const limit = parseFloat(document.getElementById('budgetLimit').value);
+                const type = document.getElementById('budgetType').value;
                 if (!limit || limit <= 0) { showToast('الرجاء إدخال حد صحيح', 'warning'); return; }
-                if (DB.get('budgets').some(b => b.category === category)) {
-                    showToast('يوجد بالفعل ميزانية لهذا التصنيف', 'warning');
+                if (DB.get('budgets').some(b => b.category === category && b.type === type)) {
+                    showToast('يوجد بالفعل ميزانية لهذا التصنيف والنوع', 'warning');
                     return;
                 }
-                DB.addBudget({ category, limit });
+                DB.addBudget({ category, limit, type });
                 loadBudgets();
                 document.getElementById('budgetLimit').value = '';
                 showToast('✅ تم إضافة الميزانية بنجاح', 'success');
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Saving Form
+            document.getElementById('charityForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const type = document.getElementById('charityType').value;
+                const amount = parseFloat(document.getElementById('charityAmount').value);
+                const recipient = document.getElementById('charityRecipient').value.trim();
+                const category = document.getElementById('charityCategory').value;
+                const account = document.getElementById('charityAccount').value;
+                const date = document.getElementById('charityDate').value;
+                const notes = document.getElementById('charityNotes').value;
+
+                if (!amount || amount <= 0) { showToast('الرجاء إدخال مبلغ صحيح', 'warning'); return; }
+                if (!date) { showToast('الرجاء تحديد التاريخ', 'warning'); return; }
+
+                const transaction = {
+                    type: 'charity',
+                    amount,
+                    category: 'تجارة مع الله',
+                    charityType: type,
+                    recipient: recipient || 'غير محدد',
+                    date,
+                    account,
+                    notes: notes || ''
+                };
+
+                DB.addTransaction(transaction);
+                loadCharity();
+                loadTransactions();
+                updateDashboard();
+                document.getElementById('charityAmount').value = '';
+                document.getElementById('charityRecipient').value = '';
+                document.getElementById('charityNotes').value = '';
+                document.getElementById('charityDate').value = new Date().toISOString().split('T')[0];
+                showToast('🤲 تم تسجيل العملية في تجارة مع الله', 'success');
+                setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
+            });
+
+            // باقي النماذج...
             document.getElementById('savingForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('savingName').value.trim();
@@ -4103,7 +4015,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Visa Form
             document.getElementById('visaForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('visaName').value.trim();
@@ -4112,14 +4023,12 @@
                 const monthly = parseFloat(document.getElementById('visaMonthly').value);
                 const date = document.getElementById('visaDate').value;
                 const dueDate = document.getElementById('visaDueDate').value;
-
                 if (!name) { showToast('الرجاء إدخال اسم المشتريات', 'warning'); return; }
                 if (!total || total <= 0) { showToast('الرجاء إدخال مبلغ صحيح', 'warning'); return; }
                 if (!installments || installments < 1) { showToast('الرجاء إدخال عدد أقساط صحيح', 'warning'); return; }
                 if (!monthly || monthly <= 0) { showToast('الرجاء إدخال القسط الشهري', 'warning'); return; }
                 if (!date) { showToast('الرجاء تحديد تاريخ الشراء', 'warning'); return; }
                 if (!dueDate) { showToast('الرجاء تحديد تاريخ الاستحقاق', 'warning'); return; }
-
                 DB.addVisa({ name, total, installments, monthly, date, dueDate });
                 loadVisa();
                 updateDashboard();
@@ -4133,7 +4042,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Association Form
             document.getElementById('associationForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('assocName').value.trim();
@@ -4142,14 +4050,12 @@
                 const turn = parseInt(document.getElementById('assocTurn').value);
                 const startDate = document.getElementById('assocStartDate').value;
                 const endDate = document.getElementById('assocEndDate').value;
-
                 if (!name) { showToast('الرجاء إدخال اسم الجمعية', 'warning'); return; }
                 if (!amount || amount <= 0) { showToast('الرجاء إدخال مبلغ صحيح', 'warning'); return; }
                 if (!months || months < 1) { showToast('الرجاء إدخال عدد شهور صحيح', 'warning'); return; }
                 if (!turn || turn < 1) { showToast('الرجاء إدخال دوري رقم صحيح', 'warning'); return; }
                 if (!startDate) { showToast('الرجاء تحديد تاريخ البدء', 'warning'); return; }
                 if (!endDate) { showToast('الرجاء تحديد تاريخ الانتهاء', 'warning'); return; }
-
                 DB.addAssociation({ name, amount, months, turn, startDate, endDate });
                 loadAssociations();
                 document.getElementById('assocName').value = '';
@@ -4162,7 +4068,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Obligation Form
             document.getElementById('obligationForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('oblName').value.trim();
@@ -4185,7 +4090,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Family Form
             document.getElementById('familyForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('familyName').value.trim();
@@ -4200,7 +4104,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Debt Form
             document.getElementById('debtForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('debtName').value.trim();
@@ -4224,7 +4127,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Goal Form
             document.getElementById('goalForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('goalName').value.trim();
@@ -4245,7 +4147,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Subscription Form
             document.getElementById('subscriptionForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const name = document.getElementById('subName').value.trim();
@@ -4265,7 +4166,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // Portal Form
             document.getElementById('portalForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const portal = document.getElementById('portalSelect').value;
@@ -4296,7 +4196,6 @@
                 setTimeout(() => { if (AUTH.currentUser) syncSaveToFirebase(); }, 500);
             });
 
-            // User Form
             document.getElementById('userForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const username = document.getElementById('newUsername').value.trim();
@@ -4315,12 +4214,10 @@
                 }
             });
 
-            // Search & Filters
             document.getElementById('searchTransactions').addEventListener('input', loadTransactions);
             document.getElementById('filterCategory').addEventListener('change', loadTransactions);
             document.getElementById('filterType').addEventListener('change', loadTransactions);
 
-            // Report period change
             document.getElementById('reportPeriod').addEventListener('change', function() {
                 const isCustom = this.value === 'custom';
                 document.getElementById('customDateGroup').style.display = isCustom ? 'block' : 'none';
@@ -4334,11 +4231,9 @@
                 weekday: 'long'
             });
 
-            // نشاط المستخدم
             document.addEventListener('click', function() { if (!AUTH.isLocked) AUTH.lastActivity = Date.now(); });
             document.addEventListener('keydown', function() { if (!AUTH.isLocked) AUTH.lastActivity = Date.now(); });
 
-            // جلسة العمل
             setInterval(() => {
                 if (!AUTH.isLocked && AUTH.currentUser) {
                     const idle = (Date.now() - AUTH.lastActivity) / 60000;
@@ -4348,32 +4243,26 @@
                 }
             }, 30000);
 
-            // Enter و ESC
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && document.getElementById('quickLockScreen').style.display !== 'none') quickUnlock();
                 if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') loginUser();
                 if (e.key === 'Escape' && !AUTH.isLocked && AUTH.currentUser) quickLock();
             });
 
-            // تحميل الصورة المحفوظة
             const savedAvatar = localStorage.getItem('flosy_avatar');
             if (savedAvatar) {
                 const avatar = document.querySelector('.sidebar-header .avatar');
                 avatar.innerHTML = `<img src="${savedAvatar}" alt="avatar">`;
             }
 
-            console.log('💰 فلوسي برو v6.0 - النظام المالي المتكامل');
+            console.log('💰 فلوسي برو v6.5 - النظام المالي المتكامل');
+            console.log('🤲 قسم "تجارة مع الله" مفعل');
             console.log('👥 المستخدمين:', AUTH.users.length);
             console.log('👤 المستخدم الحالي:', AUTH.currentUser?.username || 'غير مسجل');
             console.log('🔥 Firebase:', db ? '✅ متصل' : '❌ غير متصل');
-            console.log('🔐 كلمة المرور: 8 أحرف مختلفة (Admin@1234)');
-            console.log('📊 التقارير المتقدمة - مقارنات - تصدير PDF A4');
-            console.log('🔔 إشعارات - تذكيرات - مزامنة سحابية');
-            console.log('💾 نسخ احتياطي شهري تلقائي');
 
-            // تنبيه ترحيبي
             setTimeout(() => {
-                showToast('👋 مرحباً بك في فلوسي برو v6.0!', 'info', 5000);
+                showToast('🤲 مرحباً بك في فلوسي v6.5 - تجارة مع الله', 'info', 5000);
             }, 1500);
         });
     </script>
